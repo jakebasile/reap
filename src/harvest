@@ -16,5 +16,11 @@ login_parser.add_argument('password', help = 'Your password.')
 login_parser.add_argument('subdomain', help = 'The subdomain of harvestapp.com where you log in.')
 login_parser.set_defaults(func = login)
 
+status_parser = subparsers.add_parser(
+    'status',
+    help = 'See your status for today and this week.',
+)
+status_parser.set_defaults(func = status)
+
 args = parser.parse_args()
 args.func(args)
