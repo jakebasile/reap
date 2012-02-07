@@ -4,9 +4,11 @@ from urllib2 import Request, urlopen
 from keyring import set_password, get_password
 from os.path import expanduser
 
-STATUS_TASK_FORMAT = '''Name:   {entry[project]} - {entry[task]} ({entry[project_id]} {entry[task_id]})
-Notes:  {entry[notes]}
-Hours:  {entry[hours]}
+STATUS_TASK_FORMAT = '''Project:    {entry[project]}
+Task:       {entry[task]}
+ID:         {entry[project_id]} {entry[task_id]}
+Notes:      {entry[notes]}
+Hours:      {entry[hours]}
 '''
 
 def save_info(base_uri, username):
