@@ -83,3 +83,11 @@ def bookmark(args):
     bookmarks = load_bookmarks()
     bookmarks[args.name] = (args.projectid, args.taskid)
     save_bookmarks(bookmarks)
+
+def bookmarks(args):
+    bookmarks = load_bookmarks()
+    print '\nCurrent Bookmarks:'
+    for key in bookmarks.keys():
+        bkmk = bookmarks[key]
+        print str.format('{}: P:[{}] T:[{}]', key, bkmk[0], bkmk[1])
+    print ''
