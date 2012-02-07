@@ -4,10 +4,10 @@ from urllib2 import Request, urlopen
 from keyring import set_password, get_password
 from os.path import expanduser
 
-STATUS_TASK_FORMAT = '''
-Name:   {entry[project]} - {entry[task]} ({entry[project_id]} {entry[task_id]})
+STATUS_TASK_FORMAT = '''Name:   {entry[project]} - {entry[task]} ({entry[project_id]} {entry[task_id]})
 Notes:  {entry[notes]}
-Hours:  {entry[hours]}'''
+Hours:  {entry[hours]}
+'''
 
 def save_info(base_uri, username):
     with open(expanduser('~/.harvestrc'), 'w') as file:
@@ -60,5 +60,6 @@ def status(args):
         json = loads(''.join([line for line in response.readlines()]))
         print '\nToday\'s Projects:'
         for entry in json['day_entries']:
+            if entry.has_key('timer_started_at'):
+                print '**Currently Running Timer**\n',
             print str.format(STATUS_TASK_FORMAT, entry = entry)
-        print ''
