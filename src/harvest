@@ -22,5 +22,14 @@ status_parser = subparsers.add_parser(
 )
 status_parser.set_defaults(func = status)
 
+bookmark_parser = subparsers.add_parser(
+    'bookmark',
+    help = 'Bookmark a project and task so that it can be referred to more easily.',
+)
+bookmark_parser.add_argument('projectid', help = 'The project ID.')
+bookmark_parser.add_argument('taskid', help = 'The task ID.')
+bookmark_parser.add_argument('name', help = 'The bookmark name')
+bookmark_parser.set_defaults(func = bookmark)
+
 args = parser.parse_args()
 args.func(args)
