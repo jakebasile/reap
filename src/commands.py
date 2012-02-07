@@ -2,7 +2,8 @@ from json import loads
 from base64 import b64encode
 from urllib2 import Request, urlopen
 from keyring import set_password, get_password
-from os.path import expanduser
+from os.path import expanduser, exists
+from pickle import dump, load
 
 STATUS_TASK_FORMAT = '''Project:    {entry[project]}
 Task:       {entry[task]}
@@ -21,6 +22,18 @@ def load_info():
         base_uri = file.readline().strip()
         username = file.readline().strip()
         return (base_uri, username)
+
+def save_bookmarks(bookmarks):
+    with open(expanduser('~/.harvestbkmrks'), 'w') as file:
+        dump(bookmarks, file)
+
+def load_bookmarks():
+    path = expanduser('~/.harvestbkmrks')
+    if exists(path):
+        with open(path, 'r') as file:
+            return load(file)
+    else:
+        return {}
 
 def get_request(path):
     info = load_info()
@@ -65,3 +78,8 @@ def status(args):
             if entry.has_key('timer_started_at'):
                 print '**Currently Running Timer**\n',
             print str.format(STATUS_TASK_FORMAT, entry = entry)
+
+def bookmark(args):
+    bookmarks = load_bookmarks()
+    bookmarks[args.name] = (args.projectid, args.taskid)
+    save_bookmarks(bookmarks)
