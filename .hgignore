@@ -1,4 +1,4 @@
 syntax: regexp
 
 ^.*\.pyc$
-^reap.egg-info/.*$
+^.*reap.egg-info/.*$
