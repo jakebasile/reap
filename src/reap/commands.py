@@ -13,6 +13,7 @@
 # limitations under the License.
 
 from support import *
+from constants import *
 from json import loads, dumps
 from base64 import b64encode
 from urllib2 import Request, urlopen
@@ -20,18 +21,6 @@ from keyring import set_password, get_password
 from os.path import expanduser, exists
 from pickle import dump, load
 from re import compile, IGNORECASE
-
-# Constants
-STATUS_TASK_FORMAT = '''Project:    {entry[project]}
-Task:       {entry[task]}
-ID:         {entry[project_id]} {entry[task_id]}
-Notes:      {entry[notes]}
-Hours:      {entry[hours]}
-'''
-
-SELECT_TASK_FORMAT = '''{index}:    {project[name]}
-            {task[name]}
-'''
 
 def login(args):
     base_uri = 'https://' + args.subdomain + '.harvestapp.com/'
