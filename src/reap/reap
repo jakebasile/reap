@@ -1,0 +1,95 @@
+#!/usr/bin/python
+
+# Copyright 2012 Jake Basile
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+import argparse
+from reap.commands import *
+
+# Parser Declarations
+parser = argparse.ArgumentParser(
+    description = 'Harvest time-tracking from the command line!'
+)
+subparsers = parser.add_subparsers()
+
+# Login
+login_parser = subparsers.add_parser(
+    'login',
+    help = 'Login to the command line utility.',
+)
+login_parser.add_argument('username', help = 'Your email address.')
+login_parser.add_argument('password', help = 'Your password.')
+login_parser.add_argument('subdomain', help = 'The subdomain of harvestapp.com where you log in.')
+login_parser.set_defaults(func = login)
+
+# Status
+status_parser = subparsers.add_parser(
+    'status',
+    help = 'See your status for today and this week.',
+)
+status_parser.set_defaults(func = status)
+
+# Bookmark
+bookmark_parser = subparsers.add_parser(
+    'bookmark',
+    help = 'Bookmark a project and task so that it can be referred to more easily.',
+)
+bookmark_parser.add_argument('projectid', help = 'The project ID.')
+bookmark_parser.add_argument('taskid', help = 'The task ID.')
+bookmark_parser.add_argument('name', help = 'The bookmark name')
+bookmark_parser.set_defaults(func = bookmark)
+
+# Bookmarks
+bookmarks_parser = subparsers.add_parser(
+    'bookmarks',
+    help = 'Displays all bookmarks',
+)
+bookmarks_parser.set_defaults(func = bookmarks)
+
+# Note
+note_parser = subparsers.add_parser(
+    'note',
+    help = 'Adds or changes a note on a task.',
+)
+note_parser.add_argument('--append', '-a', action = 'store_true', help = 'Append to the current note instead of deleting')
+note_parser.add_argument('task', help = 'The task name or bookmark to change the note on.')
+note_parser.add_argument('note', help = 'The note text to change or append.')
+note_parser.set_defaults(func = note)
+
+# Start
+start_parser = subparsers.add_parser(
+    'start',
+    help = 'Starts a timer. Will stop other timers automatically.',
+)
+start_parser.add_argument('task', help = 'The task name or bookmark to start the timer on.')
+start_parser.set_defaults(func = start)
+
+# Stop
+stop_parser = subparsers.add_parser(
+    'stop',
+    help = 'Stops the current active timer.',
+)
+stop_parser.set_defaults(func = stop)
+
+# Delete
+delete_parser = subparsers.add_parser(
+    'delete',
+    help = 'Deletes a task.'
+)
+delete_parser.add_argument('task', help = 'The task name or bookmark to delete.')
+delete_parser.set_defaults(func = delete)
+
+# The Parsening!
+args = parser.parse_args()
+args.func(args)
