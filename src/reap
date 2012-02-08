@@ -224,6 +224,17 @@ def stop(args):
     else:
         print 'No active timer!'
 
+def delete(args):
+    task_info = get_task_info(args.task)
+    entry = get_entry(task_info[0], task_info[1])
+    if not entry:
+        print 'No task found.'
+    else:
+        request = get_request('daily/delete/' + str(entry['id']))
+        response = urlopen(request)
+        if response:
+            print 'Task deleted'
+
 # Parser Declarations
 parser = argparse.ArgumentParser(
     description = 'Harvest time-tracking from the command line!'
@@ -288,6 +299,15 @@ stop_parser = subparsers.add_parser(
     help = 'Stops the current active timer.',
 )
 stop_parser.set_defaults(func = stop)
+
+# Delete
+delete_parser = subparsers.add_parser(
+    'delete',
+    help = 'Deletes a task.'
+)
+delete_parser.add_argument('task', help = 'The task name or bookmark to delete.')
+delete_parser.set_defaults(func = delete)
+
 # The Parsening!
 args = parser.parse_args()
 args.func(args)
