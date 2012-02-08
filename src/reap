@@ -19,6 +19,7 @@ from urllib2 import Request, urlopen
 from keyring import set_password, get_password
 from os.path import expanduser, exists
 from pickle import dump, load
+from re import compile, IGNORECASE
 
 # Constants
 STATUS_TASK_FORMAT = '''Project:    {entry[project]}
@@ -26,6 +27,10 @@ Task:       {entry[task]}
 ID:         {entry[project_id]} {entry[task_id]}
 Notes:      {entry[notes]}
 Hours:      {entry[hours]}
+'''
+
+SELECT_TASK_FORMAT = '''{index}:    {project[name]}
+            {task[name]}
 '''
 
 # Functions
@@ -69,6 +74,47 @@ def get_request(path):
         print 'Login first!'
         return None
 
+def find_task_id(query):
+    # check for id in bookmarks first.
+    bkmks = load_bookmarks()
+    if bkmks.has_key(query):
+        return bkmks[query]
+    # If it's not there, get the full list and search it.
+    request = get_request('daily')
+    if request:
+        response = urlopen(request)
+        json = loads(''.join([line for line in response.readlines()]))
+        projects = json['projects']
+        q = compile(query, IGNORECASE)
+        results = []
+        for project in projects:
+            for task in project['tasks']:
+                matches = q.search(task['name'])
+                if matches:
+                    results += [(project, task)]
+        # if there is only one search result, return it now.
+        if len(results) is 1:
+            return (results[0][0]['id'], results[0][1]['id'])
+        # otherwise, ask the user.
+        print '\nMore than one task found, please select task from list.\n'
+        i = 1
+        for project, task in results:
+            print str.format(SELECT_TASK_FORMAT, project = project, task = task, index = i)
+            i += 1
+        selection = None
+        while not selection:
+            print 'Choose Wisely:> ',
+            input = raw_input()
+            try:
+                candidate = int(input) - 1
+                if candidate >= 0 and candidate < len(results):
+                    selection = candidate
+                else:
+                    print 'You have chosen... poorly.'
+            except:
+                print 'You have chosen... poorly.'
+        return (results[selection][0]['id'], results[selection][1]['id'])
+
 def login(args):
     base_uri = 'https://' + args.subdomain + '.harvestapp.com/'
     auth = b64encode(args.username + ':' + args.password)
@@ -109,6 +155,9 @@ def bookmarks(args):
         print str.format('{}: P:[{}] T:[{}]', key, bkmk[0], bkmk[1])
     print ''
 
+def note(args):
+    print find_task_id(args.task)
+
 # Parser Declarations
 parser = argparse.ArgumentParser(
     description = 'Harvest time-tracking from the command line!'
@@ -148,6 +197,16 @@ bookmarks_parser = subparsers.add_parser(
     help = 'Displays all bookmarks',
 )
 bookmarks_parser.set_defaults(func = bookmarks)
+
+# Note
+note_parser = subparsers.add_parser(
+    'note',
+    help = 'Adds or changes a note on a task.',
+)
+note_parser.add_argument('--append', '-a', help = 'Append to the current note instead of deleting')
+note_parser.add_argument('task', help = 'The task name to change the note on.')
+note_parser.add_argument('note', help = 'The note text to change or append.')
+note_parser.set_defaults(func = note)
 
 # The Parsening!
 args = parser.parse_args()
