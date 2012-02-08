@@ -1,10 +1,12 @@
 # Reap. The Simple Command Line for Harvest.
 
-Reap focuses on providing a simple and clear command line interface to the [Harvest](http://www.harvestapp.com) time tracking system. It does not necessarily provide as in-depth an experience as [HCL](https://github.com/zenhob/hcl), but should serve most people's needs.
+Reap focuses on providing a simple and clear command line interface to the [Harvest](http://www.harvestapp.com) time tracking system.
 
 ## Installation
 
-**NOTE**: Reap will current *NOT* work in virtualenv, due to an issue in the upstream dependency [keyring](http://pypi.python.org/pypi/keyring).
+**NOTE**: Reap will currently *NOT* work in virtualenv, due to an issue in the upstream dependency [keyring](http://pypi.python.org/pypi/keyring).
+
+To install the latest version of Reap, use Pip:
 
     sudo pip install hg+http://code.jakebasile.com/reap
 
@@ -12,9 +14,13 @@ Reap focuses on providing a simple and clear command line interface to the [Harv
 
 The installation will add a new command to your system, `reap`. This will allow access to all of Reap's functionality.
 
+### Login
+
 To use Reap, you must first login. To do so, use the `login` command.
 
     reap login username password subdomain
+
+### Help
 
 To explore Reap's commands, try:
 
@@ -24,6 +30,38 @@ and for more information on other commands, try, for example:
 
     reap status -h
 
+### Specifying Tasks
+
+To specify a task, you can specify all or part of the task name. For instance, to start a timer on a task named "Software Engineering", you can use any of the following:
+
+    reap start 'software engineering'
+    reap start soft
+    reap start eng
+    reap start '.*Engineering'
+
+If there are multiple tasks that match the task query entered, such as if two projects have "Software Engineering", you will be presented with a list to select from. To save time, you can create a bookmark to the task's project ID and task ID using `bookmark`. Then you can use the bookmark anywhere Reap expects a task name.
+
 ## More Help
 
 If you can't figure something out, or you think Reap is broken, send me an [email](http://www.google.com/recaptcha/mailhide/d?k=01Setbc2JX7fNIQvHb-xyRqA==&c=J27oPGH6BTxbJKfL2FXzDSIGtNL1BzvC4Xt4Jomxcss=).
+
+## Future Plans
+
+In the future, I plan to add:
+
+* A whole bunch more error checking and more useful error messages.
+* Combined command capabilities, so that you can start a task and add a note to that task in one go.
+* General code cleanup. I wrote most of this in two weeknights, so there's room for improvement.
+* A way to view all available projects and tasks.
+* Better bookmarking.
+* Time displays in Minutes:Seconds, not decimal time.
+
+## Changelog
+
+### v0.1.1
+
+* fixed an issue arising from moving to different files.
+
+### v0.1
+
+* Initial Release!
