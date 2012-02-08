@@ -7,7 +7,9 @@ setup(
     author = 'Jake Basile',
     author_email = 'jakebasile@me.com',
     url = 'https://bitbucket.org/jakebasile/reap',
-    scripts = ['src/reap'],
+    package_dir = {'': 'src'},
+    packages = ['reap'],
+    scripts = ['src/reap/reap'],
     install_requires = ['keyring'],
     classifiers = [
         'Development Status :: 2 - Pre-Alpha',
