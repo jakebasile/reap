@@ -129,6 +129,16 @@ def get_entry(projectid, taskid):
                 return entry
         # TODO: what about multiple entries with the same task info?
 
+def get_active_timer():
+    request = get_request('daily')
+    if request:
+        response = urlopen(request)
+        json = loads(''.join([line for line in response.readlines()]))
+        entries = json['day_entries']
+        for entry in entries:
+            if entry.has_key('timer_started_at'):
+                return entry
+
 def login(args):
     base_uri = 'https://' + args.subdomain + '.harvestapp.com/'
     auth = b64encode(args.username + ':' + args.password)
@@ -204,6 +214,16 @@ def start(args):
         if response.code == 200:
             print 'Timer Started!'
 
+def stop(args):
+    active = get_active_timer()
+    if active:
+        request = get_request('daily/timer/' + str(active['id']))
+        response = urlopen(request)
+        if response.code == 200:
+            print 'Timer stopped!'
+    else:
+        print 'No active timer!'
+
 # Parser Declarations
 parser = argparse.ArgumentParser(
     description = 'Harvest time-tracking from the command line!'
@@ -262,6 +282,12 @@ start_parser = subparsers.add_parser(
 start_parser.add_argument('task', help = 'The task name or bookmark to start the timer on.')
 start_parser.set_defaults(func = start)
 
+# Stop
+stop_parser = subparsers.add_parser(
+    'stop',
+    help = 'Stops the current active timer.',
+)
+stop_parser.set_defaults(func = stop)
 # The Parsening!
 args = parser.parse_args()
 args.func(args)
