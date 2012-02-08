@@ -116,6 +116,9 @@ def get_task_info(query):
         return (results[selection][0]['id'], results[selection][1]['id'])
 
 def get_entry(projectid, taskid):
+    # im not really sure why this needs to happen.
+    projectid = str(projectid)
+    taskid = str(taskid)
     request = get_request('daily')
     if request:
         response = urlopen(request)
