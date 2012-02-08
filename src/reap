@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 import argparse
-from json import loads
+from json import loads, dumps
 from base64 import b64encode
 from urllib2 import Request, urlopen
 from keyring import set_password, get_password
@@ -74,7 +74,7 @@ def get_request(path):
         print 'Login first!'
         return None
 
-def find_task_id(query):
+def get_task_info(query):
     # check for id in bookmarks first.
     bkmks = load_bookmarks()
     if bkmks.has_key(query):
@@ -103,7 +103,7 @@ def find_task_id(query):
             i += 1
         selection = None
         while not selection:
-            print 'Choose Wisely:> ',
+            print 'Choose Wisely: ',
             input = raw_input()
             try:
                 candidate = int(input) - 1
@@ -114,6 +114,17 @@ def find_task_id(query):
             except:
                 print 'You have chosen... poorly.'
         return (results[selection][0]['id'], results[selection][1]['id'])
+
+def get_entry(projectid, taskid):
+    request = get_request('daily')
+    if request:
+        response = urlopen(request)
+        json = loads(''.join([line for line in response.readlines()]))
+        entries = json['day_entries']
+        for entry in entries:
+            if entry['project_id'] == projectid and entry['task_id'] == taskid:
+                return entry
+        # TODO: what about multiple entries with the same task info?
 
 def login(args):
     base_uri = 'https://' + args.subdomain + '.harvestapp.com/'
@@ -156,7 +167,18 @@ def bookmarks(args):
     print ''
 
 def note(args):
-    print find_task_id(args.task)
+    task_info = get_task_info(args.task)
+    entry = get_entry(task_info[0], task_info[1])
+    if args.append:
+        entry['notes'] = entry['notes'] + args.note
+    else:
+        entry['notes'] = args.note
+    request = get_request('daily/update/' + str(entry['id']))
+    request.add_data(dumps(entry))
+    response = urlopen(request)
+    if response.code == 200:
+        print 'Success!'
+
 
 # Parser Declarations
 parser = argparse.ArgumentParser(
@@ -203,7 +225,7 @@ note_parser = subparsers.add_parser(
     'note',
     help = 'Adds or changes a note on a task.',
 )
-note_parser.add_argument('--append', '-a', help = 'Append to the current note instead of deleting')
+note_parser.add_argument('--append', '-a', action = 'store_true', help = 'Append to the current note instead of deleting')
 note_parser.add_argument('task', help = 'The task name to change the note on.')
 note_parser.add_argument('note', help = 'The note text to change or append.')
 note_parser.set_defaults(func = note)
