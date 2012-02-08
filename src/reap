@@ -1,3 +1,5 @@
+#!/usr/bin/python
+import argparse
 from json import loads
 from base64 import b64encode
 from urllib2 import Request, urlopen
@@ -91,3 +93,41 @@ def bookmarks(args):
         bkmk = bookmarks[key]
         print str.format('{}: P:[{}] T:[{}]', key, bkmk[0], bkmk[1])
     print ''
+
+parser = argparse.ArgumentParser(
+    description = 'Harvest time-tracking from the command line!'
+)
+subparsers = parser.add_subparsers()
+
+login_parser = subparsers.add_parser(
+    'login',
+    help = 'Login to the command line utility.',
+)
+login_parser.add_argument('username', help = 'Your email address.')
+login_parser.add_argument('password', help = 'Your password.')
+login_parser.add_argument('subdomain', help = 'The subdomain of harvestapp.com where you log in.')
+login_parser.set_defaults(func = login)
+
+status_parser = subparsers.add_parser(
+    'status',
+    help = 'See your status for today and this week.',
+)
+status_parser.set_defaults(func = status)
+
+bookmark_parser = subparsers.add_parser(
+    'bookmark',
+    help = 'Bookmark a project and task so that it can be referred to more easily.',
+)
+bookmark_parser.add_argument('projectid', help = 'The project ID.')
+bookmark_parser.add_argument('taskid', help = 'The task ID.')
+bookmark_parser.add_argument('name', help = 'The bookmark name')
+bookmark_parser.set_defaults(func = bookmark)
+
+bookmarks_parser = subparsers.add_parser(
+    'bookmarks',
+    help = 'Displays all bookmarks',
+)
+bookmarks_parser.set_defaults(func = bookmarks)
+
+args = parser.parse_args()
+args.func(args)
