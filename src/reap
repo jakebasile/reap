@@ -20,6 +20,7 @@ from keyring import set_password, get_password
 from os.path import expanduser, exists
 from pickle import dump, load
 
+# Constants
 STATUS_TASK_FORMAT = '''Project:    {entry[project]}
 Task:       {entry[task]}
 ID:         {entry[project_id]} {entry[task_id]}
@@ -27,6 +28,7 @@ Notes:      {entry[notes]}
 Hours:      {entry[hours]}
 '''
 
+# Functions
 def save_info(base_uri, username):
     with open(expanduser('~/.harvestrc'), 'w') as file:
         file.write(base_uri + '\n')
@@ -107,11 +109,13 @@ def bookmarks(args):
         print str.format('{}: P:[{}] T:[{}]', key, bkmk[0], bkmk[1])
     print ''
 
+# Parser Declarations
 parser = argparse.ArgumentParser(
     description = 'Harvest time-tracking from the command line!'
 )
 subparsers = parser.add_subparsers()
 
+# Login
 login_parser = subparsers.add_parser(
     'login',
     help = 'Login to the command line utility.',
@@ -121,12 +125,14 @@ login_parser.add_argument('password', help = 'Your password.')
 login_parser.add_argument('subdomain', help = 'The subdomain of harvestapp.com where you log in.')
 login_parser.set_defaults(func = login)
 
+# Status
 status_parser = subparsers.add_parser(
     'status',
     help = 'See your status for today and this week.',
 )
 status_parser.set_defaults(func = status)
 
+# Bookmark
 bookmark_parser = subparsers.add_parser(
     'bookmark',
     help = 'Bookmark a project and task so that it can be referred to more easily.',
@@ -136,11 +142,13 @@ bookmark_parser.add_argument('taskid', help = 'The task ID.')
 bookmark_parser.add_argument('name', help = 'The bookmark name')
 bookmark_parser.set_defaults(func = bookmark)
 
+# Bookmarks
 bookmarks_parser = subparsers.add_parser(
     'bookmarks',
     help = 'Displays all bookmarks',
 )
 bookmarks_parser.set_defaults(func = bookmarks)
 
+# The Parsening!
 args = parser.parse_args()
 args.func(args)
