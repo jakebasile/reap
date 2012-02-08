@@ -182,6 +182,27 @@ def note(args):
     if response.code == 200:
         print 'Success!'
 
+def start(args):
+    task_info = get_task_info(args.task)
+    entry = get_entry(task_info[0], task_info[1])
+    if not entry:
+        # entry not found, need to create it.
+        req = {
+            'notes': '',
+            'hours': '',
+            'project_id': task_info[0],
+            'task_id': task_info[1],
+        }
+        request = get_request('daily/add')
+        request.add_data(dumps(req))
+        response = urlopen(request)
+        if response.code == 200:
+            print 'Timer Started!'
+    else:
+        request = get_request('daily/timer/' + str(entry['id']))
+        response = urlopen(request)
+        if response.code == 200:
+            print 'Timer Started!'
 
 # Parser Declarations
 parser = argparse.ArgumentParser(
@@ -229,9 +250,17 @@ note_parser = subparsers.add_parser(
     help = 'Adds or changes a note on a task.',
 )
 note_parser.add_argument('--append', '-a', action = 'store_true', help = 'Append to the current note instead of deleting')
-note_parser.add_argument('task', help = 'The task name to change the note on.')
+note_parser.add_argument('task', help = 'The task name or bookmark to change the note on.')
 note_parser.add_argument('note', help = 'The note text to change or append.')
 note_parser.set_defaults(func = note)
+
+# Start
+start_parser = subparsers.add_parser(
+    'start',
+    help = 'Starts a timer. Will stop other timers automatically.',
+)
+start_parser.add_argument('task', help = 'The task name or bookmark to start the timer on.')
+start_parser.set_defaults(func = start)
 
 # The Parsening!
 args = parser.parse_args()
