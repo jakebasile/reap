@@ -8,7 +8,7 @@ Reap focuses on providing a simple and clear command line interface to the [Harv
 
 To install the latest version of Reap, use Pip:
 
-    sudo pip install hg+http://code.jakebasile.com/reap
+    sudo pip install reap
 
 ## Usage
 
@@ -57,6 +57,10 @@ In the future, I plan to add:
 * Time displays in Minutes:Seconds, not decimal time.
 
 ## Changelog
+
+### v0.1.2
+
+* Changed setup.py to enable simple download from Pip, PyPI.
 
 ### v0.1.1
 
