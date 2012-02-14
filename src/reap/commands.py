@@ -49,7 +49,9 @@ def status(args):
         for entry in json['day_entries']:
             if entry.has_key('timer_started_at'):
                 print '**Currently Running Timer**\n',
-            print str.format(STATUS_TASK_FORMAT, entry = entry)
+            hours = int(entry['hours'])
+            minutes = int(entry['hours'] % 1 * 60)
+            print str.format(STATUS_TASK_FORMAT, entry = entry, hours = hours, minutes = minutes)
 
 def bookmark(args):
     bookmarks = load_bookmarks()
