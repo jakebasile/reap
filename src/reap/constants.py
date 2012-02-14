@@ -16,7 +16,7 @@ STATUS_TASK_FORMAT = '''Project:    {entry[project]}
 Task:       {entry[task]}
 ID:         {entry[project_id]} {entry[task_id]}
 Notes:      {entry[notes]}
-Hours:      {entry[hours]}
+Time:       {hours}:{minutes:02d}
 '''
 
 SELECT_TASK_FORMAT = '''{index}:    {project[name]}
