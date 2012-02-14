@@ -21,10 +21,12 @@ from keyring import set_password, get_password
 from os.path import expanduser, exists
 from pickle import dump, load
 from re import compile, IGNORECASE
+from getpass import getpass
 
 def login(args):
     base_uri = 'https://' + args.subdomain + '.harvestapp.com/'
-    auth = b64encode(args.username + ':' + args.password)
+    password = getpass()
+    auth = b64encode(args.username + ':' + password)
     uri = base_uri + 'account/who_am_i'
     request = Request(uri)
     request.add_header('Content-Type', 'application/json')
@@ -32,7 +34,7 @@ def login(args):
     request.add_header('Authorization', 'Basic ' + auth)
     try:
         response = urlopen(request)
-        set_password(base_uri, args.username, args.password)
+        set_password(base_uri, args.username, password)
         save_info(base_uri, args.username)
         print 'Success!'
     except:

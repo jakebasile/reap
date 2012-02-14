@@ -29,7 +29,6 @@ login_parser = subparsers.add_parser(
     help = 'Login to the command line utility.',
 )
 login_parser.add_argument('username', help = 'Your email address.')
-login_parser.add_argument('password', help = 'Your password.')
 login_parser.add_argument('subdomain', help = 'The subdomain of harvestapp.com where you log in.')
 login_parser.set_defaults(func = login)
 
