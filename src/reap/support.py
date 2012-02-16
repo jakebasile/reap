@@ -57,6 +57,7 @@ def get_request(path):
         request.add_header('Content-Type', 'application/json')
         request.add_header('Accept', 'application/json')
         request.add_header('Authorization', 'Basic ' + auth)
+        request.add_header('User-Agent', 'reap')
         return request
     else:
         print 'Login first!'
