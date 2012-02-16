@@ -32,6 +32,7 @@ def login(args):
     request.add_header('Content-Type', 'application/json')
     request.add_header('Accept', 'application/json')
     request.add_header('Authorization', 'Basic ' + auth)
+    request.add_header('User-Agent', 'reap')
     try:
         response = urlopen(request)
         set_password(base_uri, args.username, password)
