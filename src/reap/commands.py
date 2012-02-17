@@ -47,12 +47,15 @@ def status(args):
         response = urlopen(request)
         json = loads(''.join([line for line in response.readlines()]))
         print '\nToday\'s Projects:'
+        total = 0
         for entry in json['day_entries']:
             if entry.has_key('timer_started_at'):
                 print '**Currently Running Timer**\n',
+            total += entry['hours']
             hours = int(entry['hours'])
             minutes = int(entry['hours'] % 1 * 60)
             print str.format(STATUS_TASK_FORMAT, entry = entry, hours = hours, minutes = minutes)
+        print str.format('Total Hours For Today: {hours}:{minutes:02d}\n', hours = int(total), minutes = int(total % 1 * 60))
 
 def bookmark(args):
     bookmarks = load_bookmarks()
