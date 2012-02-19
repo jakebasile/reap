@@ -41,16 +41,22 @@ class Timesheet:
 
     def get_request(self, path):
         request = self.__init_request(path)
-        result = urllib2.urlopen(request)
-        result_json = json.load(result)
-        return result_json
+        try:
+            result = urllib2.urlopen(request)
+            result_json = json.load(result)
+            return result_json
+        except:
+            return None
 
     def post_request(self, path, data):
         request = self.__init_request(path)
-        request.add_data(json.dumps(data))
-        result = urllib2.urlopen(request)
-        result_json = json.load(result)
-        return result_json
+        try:
+            request.add_data(json.dumps(data))
+            result = urllib2.urlopen(request)
+            result_json = json.load(result)
+            return result_json
+        except:
+            return None
 
     def projects(self):
         projects_response = self.get_request('daily')
@@ -83,10 +89,13 @@ class Task:
 class Entries:
     def __init__(self, ts, json):
         self.ts = ts
-        self.entry_list = [Entry(ejson) for ejson in json]
+        self.entry_list = [Entry(ts, ejson) for ejson in json]
 
     def __iter__(self):
         return iter(self.entry_list)
+
+    def __len__(self):
+        return len(self.entry_list)
 
     def create(self, task, hours = 0, notes = ''):
         entry = {
@@ -97,10 +106,11 @@ class Entries:
         }
         response = self.ts.post_request('daily/add', entry)
         if response:
-            return Entry(response)
+            return Entry(self.ts, response)
 
 class Entry:
-    def __init__(self, json):
+    def __init__(self, ts, json):
+        self.ts = ts
         self.id = json['id']
         self.spent_at = json['spent_at']
         self.user_id = json['user_id']
@@ -121,3 +131,6 @@ class Entry:
             self.timer_started = None
             self.timer_created = None
             self.timer_updated = None
+
+    def delete(self):
+        response = self.ts.get_request('daily/delete/' + str(self.id))

@@ -86,7 +86,15 @@ class TestEntry(ReapTest):
         self.assertTrue(entry.started)
         self.assertEqual(entry.project_id, project.id)
         self.assertTrue((entry.timer_created - datetime.datetime.utcnow()) < datetime.timedelta(minutes = 1))
+        # clean up
+        entry.delete()
 
+    def test_delete_entry(self):
+        entries_count = len(self.ts.entries())
+        entry = self.ts.entries().create(self.ts.projects()[0].tasks()[0])
+        self.assertEqual(entries_count + 1, len(self.ts.entries()))
+        entry.delete()
+        self.assertEqual(entries_count, len(self.ts.entries()))
 
 if __name__ == '__main__':
     unittest.main()
