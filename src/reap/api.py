@@ -111,6 +111,9 @@ class Entries:
 class Entry:
     def __init__(self, ts, json):
         self.ts = ts
+        self.__parse_json(json)
+
+    def __parse_json(self, json):
         self.id = json['id']
         self.spent_at = json['spent_at']
         self.user_id = json['user_id']
@@ -118,10 +121,12 @@ class Entry:
         # workaround because sometimes this comes back as a string, not an int.
         self.project_id = int(json['project_id'])
         self.project_name = json['project']
-        self.task_id = json['task_id']
+        # workaround because sometimes this comes back as a string, not an int.
+        self.task_id = int(json['task_id'])
         self.task_name = json['task']
         self.hours = json['hours']
-        self.notes = json['notes']
+        # sometimes this is None, set None to empty string.
+        self.notes = json['notes'] or ''
         self.started = json.has_key('timer_started_at')
         if self.started:
             self.timer_started = parse_time(json['timer_started_at'])
@@ -134,3 +139,19 @@ class Entry:
 
     def delete(self):
         response = self.ts.get_request('daily/delete/' + str(self.id))
+
+    def update(self, notes = None, hours = None, project_id = None, task_id = None):
+        changes = {}
+        if notes:
+            changes['notes'] = notes
+        if hours:
+            changes['hours'] = hours
+        if project_id:
+            changes['project_id'] = project_id
+        if task_id:
+            changes['task_id'] = task_id
+        if(len(changes) > 0):
+            response = self.ts.post_request('daily/update/' + str(self.id), changes)
+            if response:
+                new_info = self.ts.get_request('daily/show/' + str(self.id))
+                self.__parse_json(new_info)

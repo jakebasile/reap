@@ -59,7 +59,7 @@ class TestProjectTask(ReapTest):
                 self.assertIsNotNone(task.billable)
 
 class TestEntry(ReapTest):
-    def test_get_entries(self):
+    def test_get(self):
         entries = self.ts.entries()
         self.assertIsNotNone(entries)
         for entry in entries:
@@ -78,7 +78,7 @@ class TestEntry(ReapTest):
                 self.assertIsNotNone(entry.timer_created)
                 self.assertIsNotNone(entry.timer_updated)
 
-    def test_create_entry(self):
+    def test_create(self):
         project = self.ts.projects()[0]
         task = project.tasks()[0]
         entry = self.ts.entries().create(task)
@@ -89,12 +89,68 @@ class TestEntry(ReapTest):
         # clean up
         entry.delete()
 
-    def test_delete_entry(self):
+    def test_delete(self):
         entries_count = len(self.ts.entries())
         entry = self.ts.entries().create(self.ts.projects()[0].tasks()[0])
         self.assertEqual(entries_count + 1, len(self.ts.entries()))
         entry.delete()
         self.assertEqual(entries_count, len(self.ts.entries()))
+
+    def test_update_notes(self):
+        project = self.ts.projects()[0]
+        task = project.tasks()[0]
+        entry = self.ts.entries().create(task)
+        orig_notes = entry.notes
+        new_note = random_string()
+        entry.update(notes = new_note)
+        self.assertEqual(new_note, entry.notes)
+        # make sure it propagated to the server.
+        new_entry = None
+        for test_entry in self.ts.entries():
+            if entry.id == test_entry.id:
+                new_entry = test_entry
+        self.assertIsNotNone(new_entry)
+        self.assertEqual(new_entry.notes, new_note)
+        entry.delete()
+
+    def test_update_hours(self):
+        project = self.ts.projects()[0]
+        task = project.tasks()[0]
+        entry = self.ts.entries().create(task)
+        orig_hours = entry.hours
+        new_hours = random.randint(0, 23)
+        entry.update(hours = new_hours)
+        self.assertEqual(new_hours, entry.hours)
+        # make sure it propagated to the server.
+        new_entry = None
+        for test_entry in self.ts.entries():
+            if entry.id == test_entry.id:
+                new_entry = test_entry
+        self.assertIsNotNone(new_entry)
+        self.assertEqual(new_entry.hours, new_hours)
+        entry.delete()
+
+    def test_update_project(self):
+        projects = self.ts.projects()
+        project = projects[0]
+        task = project.tasks()[0]
+        new_proj = projects[1]
+        new_task = new_proj.tasks()[0]
+        entry = self.ts.entries().create(task)
+        entry.update(project_id = new_proj.id, task_id = new_task.id)
+        self.assertEqual(new_proj.id, entry.project_id)
+        self.assertEqual(new_proj.name, entry.project_name)
+        self.assertEqual(new_task.id, entry.task_id)
+        self.assertEqual(new_task.name, entry.task_name)
+        # make sure it propagated to the server.
+        new_entry = None
+        for test_entry in self.ts.entries():
+            if entry.id == test_entry.id:
+                new_entry = test_entry
+        self.assertIsNotNone(new_entry)
+        self.assertEqual(new_entry.project_id, new_proj.id)
+        self.assertEqual(new_entry.task_id, new_task.id)
+        entry.delete()
 
 if __name__ == '__main__':
     unittest.main()
