@@ -22,8 +22,7 @@ class Timesheet:
         self.base_uri = 'https://' + base_uri + '.harvestapp.com/'
         self.username = username
         self.password = password
-        login_request = self.__get_request('account/who_am_i')
-        login_response = self.__proc_request(login_request)
+        login_response = self.__get_request('account/who_am_i')
         if not login_response:
             raise ValueError('Unable to login with given info.')
 
@@ -35,9 +34,19 @@ class Timesheet:
         request.add_header('Accept', 'application/json')
         request.add_header('Authorization', 'Basic ' + auth)
         request.add_header('User-Agent', 'reap')
-        return request
-
-    def __proc_request(self, req):
-        result = urllib2.urlopen(req)
+        result = urllib2.urlopen(request)
         result_json = json.load(result)
         return result_json
+
+    def projects(self):
+        projects_response = self.__get_request('daily')
+        projects = [Project(pjson) for pjson in projects_response['projects']]
+        return projects
+
+class Project:
+    def __init__(self, json):
+        self.name = json['name']
+        self.id = json['id']
+        self.client = json['client']
+
+
