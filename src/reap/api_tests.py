@@ -152,5 +152,32 @@ class TestEntry(ReapTest):
         self.assertEqual(new_entry.task_id, new_task.id)
         entry.delete()
 
+    def test_timer(self):
+        project = self.ts.projects()[0]
+        task = project.tasks()[0]
+        entry = self.ts.entries().create(task)
+        # it starts out running after creation.
+        self.assertTrue(entry.started)
+        entry.stop()
+        self.assertFalse(entry.started)
+        # make sure it propagated to the server.
+        new_entry = None
+        for test_entry in self.ts.entries():
+            if entry.id == test_entry.id:
+                new_entry = test_entry
+        self.assertIsNotNone(new_entry)
+        self.assertFalse(new_entry.started)
+        # start it again.
+        entry.start()
+        self.assertTrue(entry.started)
+        # make sure it propagated to the server.
+        new_entry = None
+        for test_entry in self.ts.entries():
+            if entry.id == test_entry.id:
+                new_entry = test_entry
+        self.assertIsNotNone(new_entry)
+        self.assertTrue(new_entry.started)
+        entry.delete()
+
 if __name__ == '__main__':
     unittest.main()

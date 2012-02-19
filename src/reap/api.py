@@ -155,3 +155,17 @@ class Entry:
             if response:
                 new_info = self.ts.get_request('daily/show/' + str(self.id))
                 self.__parse_json(new_info)
+
+    def start(self):
+        if not self.started:
+            response = self.ts.get_request('daily/timer/' + str(self.id))
+            if response:
+                new_info = self.ts.get_request('daily/show/' + str(self.id))
+                self.__parse_json(new_info)
+
+    def stop(self):
+        if self.started:
+            response = self.ts.get_request('daily/timer/' + str(self.id))
+            if response:
+                new_info = self.ts.get_request('daily/show/' + str(self.id))
+                self.__parse_json(new_info)
