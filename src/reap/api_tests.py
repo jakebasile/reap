@@ -40,6 +40,21 @@ class TestProjectTasks(ReapTest):
         projs = self.ts.projects()
         self.assertIsNotNone(projs)
         self.assertTrue(len(projs) > 0)
+        for proj in projs:
+            self.assertIsNotNone(proj.name)
+            self.assertIsNotNone(proj.client)
+            self.assertIsNotNone(proj.id)
+
+    def test_get_tasks(self):
+        projs = self.ts.projects()
+        for proj in projs:
+            tasks = proj.tasks()
+            self.assertIsNotNone(tasks)
+            self.assertTrue(len(tasks) > 0)
+            for task in tasks:
+                self.assertIsNotNone(task.name)
+                self.assertIsNotNone(task.id)
+                self.assertIsNotNone(task.billable)
 
 if __name__ == '__main__':
     unittest.main()
