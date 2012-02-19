@@ -14,6 +14,12 @@
 
 from support import *
 from constants import *
+
+import reap.api
+import reap.support
+import urllib2
+import keyring
+
 from json import loads, dumps
 from base64 import b64encode
 from urllib2 import Request, urlopen
@@ -24,22 +30,19 @@ from re import compile, IGNORECASE
 from getpass import getpass
 
 def login(args):
-    base_uri = 'https://' + args.subdomain + '.harvestapp.com/'
     password = getpass()
-    auth = b64encode(args.username + ':' + password)
-    uri = base_uri + 'account/who_am_i'
-    request = Request(uri)
-    request.add_header('Content-Type', 'application/json')
-    request.add_header('Accept', 'application/json')
-    request.add_header('Authorization', 'Basic ' + auth)
-    request.add_header('User-Agent', 'reap')
     try:
-        response = urlopen(request)
-        set_password(base_uri, args.username, password)
-        save_info(base_uri, args.username)
-        print 'Success!'
-    except:
-        print 'Failure, check info and try again.'
+        print args.baseuri
+        ts = reap.api.Timesheet(args.baseuri, args.username, password)
+    except ValueError:
+        print 'Invalid Credentials.'
+        return
+    except urllib2.URLError:
+        print 'Unable to communicate. Check information and try again.'
+        return
+    keyring.set_password(args.baseuri, args.username, password)
+    reap.support.save_info(args.baseuri, args.username)
+    print 'You are now logged in.'
 
 def status(args):
     request = get_request('daily')

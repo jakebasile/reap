@@ -22,7 +22,7 @@ def parse_time(timestr):
 
 class Timesheet:
     def __init__(self, base_uri, username, password):
-        self.base_uri = 'https://' + base_uri + '.harvestapp.com/'
+        self.base_uri = base_uri
         self.username = username
         self.password = password
         login_response = self.get_request('account/who_am_i')

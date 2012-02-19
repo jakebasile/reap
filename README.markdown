@@ -18,7 +18,9 @@ The installation will add a new command to your system, `reap`. This will allow 
 
 To use Reap, you must first login. To do so, use the `login` command.
 
-    reap login username password subdomain
+    reap login baseuri username
+
+Where `baseuri` is the full base domain you log in to Harvest with, such as "https://companyname.harvestapp.com/". Your username is the email address you registered with. You will be asked for your password while this command executes.
 
 ### Help
 
