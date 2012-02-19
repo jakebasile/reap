@@ -35,7 +35,7 @@ class TestLogin(ReapTest):
         self.assertIsNotNone(ts)
         self.assertRaises(ValueError, Timesheet, random_string(), random_string(), random_string())
 
-class TestProjectTasks(ReapTest):
+class TestProjectTask(ReapTest):
     def test_get_projects(self):
         projs = self.ts.projects()
         self.assertIsNotNone(projs)
@@ -55,6 +55,27 @@ class TestProjectTasks(ReapTest):
                 self.assertIsNotNone(task.name)
                 self.assertIsNotNone(task.id)
                 self.assertIsNotNone(task.billable)
+
+class TestEntry(ReapTest):
+    def test_get_entries(self):
+        entries = self.ts.entries()
+        self.assertIsNotNone(entries)
+        for entry in entries:
+            self.assertIsNotNone(entry.id)
+            self.assertIsNotNone(entry.spent_at)
+            self.assertIsNotNone(entry.user_id)
+            self.assertIsNotNone(entry.client_name)
+            self.assertIsNotNone(entry.project_id)
+            self.assertIsNotNone(entry.project_name)
+            self.assertIsNotNone(entry.task_id)
+            self.assertIsNotNone(entry.task_name)
+            self.assertIsNotNone(entry.hours)
+            self.assertIsNotNone(entry.notes)
+            if entry.started:
+                self.assertIsNotNone(entry.timer_started)
+                self.assertIsNotNone(entry.timer_created)
+                self.assertIsNotNone(entry.timer_updated)
+
 
 if __name__ == '__main__':
     unittest.main()
