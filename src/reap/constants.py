@@ -12,10 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-STATUS_TASK_FORMAT = '''Project:    {entry[project]}
-Task:       {entry[task]}
-ID:         {entry[project_id]} {entry[task_id]}
-Notes:      {entry[notes]}
+STATUS_TASK_FORMAT = '''Project:    {entry.project_name}
+Task:       {entry.task_name}
+ID:         {entry.project_id} {entry.task_id}
+Notes:      {entry.notes}
 Time:       {hours}:{minutes:02d}
 '''
 
