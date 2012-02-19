@@ -12,7 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from constants import *
+from reap.constants import *
+
+import reap.api
+
 from json import loads, dumps
 from base64 import b64encode
 from urllib2 import Request, urlopen
@@ -21,7 +24,6 @@ from os.path import expanduser, exists
 from pickle import dump, load
 from re import compile, IGNORECASE
 
-# Functions
 def save_info(base_uri, username):
     with open(expanduser('~/.harvestrc'), 'w') as file:
         file.write(base_uri + '\n')
@@ -44,6 +46,14 @@ def load_bookmarks():
             return load(file)
     else:
         return {}
+
+def get_timesheet():
+    info = reap.support.load_info()
+    base_uri = info[0]
+    username = info[1]
+    passwd = get_password(base_uri, username)
+    return reap.api.Timesheet(base_uri, username, passwd)
+
 
 def get_request(path):
     info = load_info()

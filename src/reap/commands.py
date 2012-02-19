@@ -12,8 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from support import *
-from constants import *
+from reap.support import *
+from reap.constants import *
 
 import reap.api
 import reap.support
@@ -45,20 +45,33 @@ def login(args):
     print 'You are now logged in.'
 
 def status(args):
-    request = get_request('daily')
-    if request:
-        response = urlopen(request)
-        json = loads(''.join([line for line in response.readlines()]))
-        print '\nToday\'s Projects:'
-        total = 0
-        for entry in json['day_entries']:
-            if entry.has_key('timer_started_at'):
-                print '**Currently Running Timer**\n',
-            total += entry['hours']
-            hours = int(entry['hours'])
-            minutes = int(entry['hours'] % 1 * 60)
-            print str.format(STATUS_TASK_FORMAT, entry = entry, hours = hours, minutes = minutes)
-        print str.format('Total Hours For Today: {hours}:{minutes:02d}\n', hours = int(total), minutes = int(total % 1 * 60))
+    ts = reap.support.get_timesheet()
+    total = 0
+    running_entry = None
+    stopped_entries = []
+    for entry in ts.entries():
+        if entry.started:
+            running_entry = entry
+        else:
+            stopped_entries += [entry]
+        total += entry.hours
+    if running_entry:
+        print 'Currently Running Timer:\n'
+        print str.format(
+            STATUS_TASK_FORMAT,
+            entry = running_entry,
+            hours = int(running_entry.hours),
+            minutes = int(running_entry.hours % 1 * 60),
+        )
+    if len(stopped_entries) > 0:
+        print 'Stopped Entries:\n'
+        for entry in stopped_entries:
+            print str.format(
+                STATUS_TASK_FORMAT,
+                entry = entry,
+                hours = int(entry.hours),
+                minutes = int(entry.hours % 1 * 60),
+            )
 
 def bookmark(args):
     bookmarks = load_bookmarks()
