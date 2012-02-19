@@ -43,6 +43,11 @@ class Timesheet:
         projects = [Project(pjson) for pjson in projects_response['projects']]
         return projects
 
+    def entries(self):
+        entries_response = self.__get_request('daily')
+        entries = Entries(entries_response['day_entries'])
+        return entries
+
 class Project:
     def __init__(self, json):
         self.name = json['name']
@@ -59,3 +64,28 @@ class Task:
         self.name = json['name']
         self.id = json['id']
         self.billable = json['billable']
+
+class Entries:
+    def __init__(self, json):
+        self.entry_list = [Entry(ejson) for ejson in json]
+
+    def __iter__(self):
+        return iter(self.entry_list)
+
+class Entry:
+    def __init__(self, json):
+        self.id = json['id']
+        self.spent_at = json['spent_at']
+        self.user_id = json['user_id']
+        self.client_name = json['client']
+        self.project_id = json['project_id']
+        self.project_name = json['project']
+        self.task_id = json['task_id']
+        self.task_name = json['task']
+        self.hours = json['hours']
+        self.notes = json['notes']
+        self.started = json.has_key('timer_started_at')
+        if self.started:
+            self.timer_started = json['started_at']
+            self.timer_started = json['created_at']
+            self.timer_started = json['updated_at']
