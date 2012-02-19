@@ -35,5 +35,11 @@ class TestLogin(ReapTest):
         self.assertIsNotNone(ts)
         self.assertRaises(ValueError, Timesheet, random_string(), random_string(), random_string())
 
+class TestProjectTasks(ReapTest):
+    def test_get_projects(self):
+        projs = self.ts.projects()
+        self.assertIsNotNone(projs)
+        self.assertTrue(len(projs) > 0)
+
 if __name__ == '__main__':
     unittest.main()
