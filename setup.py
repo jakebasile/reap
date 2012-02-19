@@ -16,18 +16,18 @@ from setuptools import setup
 
 setup(
     name = 'reap',
-    version = '0.1.2',
+    version = '0.2',
     description = 'A command line interface for the Harvest time tracking tool.',
     author = 'Jake Basile',
     author_email = 'jakebasile@me.com',
     url = 'http://code.jakebasile.com/reap/',
-    download_url='http://code.jakebasile.com/reap/downloads/reap-0.1.2.tar.gz',
+    download_url='http://code.jakebasile.com/reap/downloads/reap-0.2.tar.gz',
     package_dir = {'': 'src'},
     packages = ['reap'],
     scripts = ['src/reap/reap'],
     install_requires = ['keyring'],
     classifiers = [
-        'Development Status :: 2 - Pre-Alpha',
+        'Development Status :: 3 - Alpha',
         'Environment :: Console',
         'Intended Audience :: Developers',
         'Intended Audience :: End Users/Desktop',

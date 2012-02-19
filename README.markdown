@@ -6,7 +6,7 @@ Reap focuses on providing a simple and clear command line interface to the [Harv
 
 **NOTE**: Reap will currently *NOT* work in virtualenv, due to an issue in the upstream dependency [keyring](http://pypi.python.org/pypi/keyring).
 
-To install the latest version of Reap, use Pip:
+To install the latest released version of Reap, use Pip:
 
     sudo pip install reap
 
@@ -54,9 +54,15 @@ In the future, I plan to add:
 * General code cleanup. I wrote most of this in two weeknights, so there's room for improvement.
 * A way to view all available projects and tasks.
 * Better bookmarking.
-* Time displays in Minutes:Seconds, not decimal time.
 
 ## Changelog
+
+### v0.2
+
+* Moved to a better password entry mechanism.
+* Changed time output to hours:minutes.
+* Added user-agent to all requests.
+* Added daily total time to status message.
 
 ### v0.1.2
 
