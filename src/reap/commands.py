@@ -56,7 +56,7 @@ def status(args):
             stopped_entries += [entry]
         total += entry.hours
     if running_entry:
-        print 'Currently Running Timer:\n'
+        print '# Currently Running Timer:'
         print str.format(
             STATUS_TASK_FORMAT,
             entry = running_entry,
@@ -64,7 +64,7 @@ def status(args):
             minutes = int(running_entry.hours % 1 * 60),
         )
     if len(stopped_entries) > 0:
-        print 'Stopped Entries:\n'
+        print '# Stopped Entries:'
         for entry in stopped_entries:
             print str.format(
                 STATUS_TASK_FORMAT,

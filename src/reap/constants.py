@@ -14,7 +14,7 @@
 
 STATUS_TASK_FORMAT = '''Project:    {entry.project_name}
 Task:       {entry.task_name}
-ID:         {entry.project_id} {entry.task_id}
+ID:         {entry.id}
 Notes:      {entry.notes}
 Time:       {hours}:{minutes:02d}
 '''
