@@ -48,5 +48,14 @@ class Project:
         self.name = json['name']
         self.id = json['id']
         self.client = json['client']
+        self.task_json = json['tasks']
 
+    def tasks(self):
+        tasks = [Task(tjson) for tjson in self.task_json]
+        return tasks
 
+class Task:
+    def __init__(self, json):
+        self.name = json['name']
+        self.id = json['id']
+        self.billable = json['billable']
