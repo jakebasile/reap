@@ -15,6 +15,7 @@
 import unittest
 import random
 import string
+import datetime
 from reap.api import *
 
 def random_string(length = 5):
@@ -52,6 +53,7 @@ class TestProjectTask(ReapTest):
             self.assertIsNotNone(tasks)
             self.assertTrue(len(tasks) > 0)
             for task in tasks:
+                self.assertEqual(task.project.id, proj.id)
                 self.assertIsNotNone(task.name)
                 self.assertIsNotNone(task.id)
                 self.assertIsNotNone(task.billable)
@@ -75,6 +77,15 @@ class TestEntry(ReapTest):
                 self.assertIsNotNone(entry.timer_started)
                 self.assertIsNotNone(entry.timer_created)
                 self.assertIsNotNone(entry.timer_updated)
+
+    def test_create_entry(self):
+        project = self.ts.projects()[0]
+        task = project.tasks()[0]
+        entry = self.ts.entries().create(task)
+        self.assertIsNotNone(entry)
+        self.assertTrue(entry.started)
+        self.assertEqual(entry.project_id, project.id)
+        self.assertTrue((entry.timer_created - datetime.datetime.utcnow()) < datetime.timedelta(minutes = 1))
 
 
 if __name__ == '__main__':
