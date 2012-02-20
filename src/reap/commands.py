@@ -209,3 +209,57 @@ def delete(args):
             print 'Entry deleted.'
         else:
             print 'No entry with that ID.'
+
+def update(args):
+    ts = get_timesheet()
+    if ts:
+        found = None
+        for entry in ts.entries():
+            if entry.id == int(args.entryid):
+                found = entry
+                break
+        if found:
+            time = entry.hours
+            proj_id = entry.project_id
+            task_id = entry.task_id
+            notes = entry.notes
+            # check for notes
+            if args.notes:
+                if args.append:
+                    notes = entry.notes + args.notes
+                else:
+                    notes = args.notes
+            # check for time
+            if args.time:
+                split = args.time.split(':')
+                hours = float(split[0])
+                minutes = float(split[1])
+                time = hours + minutes / 60
+                if args.append:
+                    time = entry.hours + time
+            # check for task.
+            if args.task:
+                found_task = None
+                for proj in ts.projects():
+                    if proj.id == int(args.task[0]):
+                        for task in proj.tasks():
+                            if task.id == int(args.task[1]):
+                                found_task = task
+                                break
+                if found_task:
+                    proj_id = args.task[0]
+                    task_id = args.task[1]
+                else:
+                    print 'No such project and task ID. Abort.'
+                    return
+            entry.update(notes, time, proj_id, task_id)
+            print '# Updated entry:'
+            print str.format(
+                STATUS_TASK_FORMAT,
+                entry = entry,
+                hours = int(entry.hours),
+                minutes = int(entry.hours % 1 * 60),
+            )
+        else:
+            print 'No entry with that ID.'
+

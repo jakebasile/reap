@@ -96,6 +96,19 @@ delete_parser = subparsers.add_parser(
 delete_parser.add_argument('entryid', help = 'The entry ID or bookmark to delete.')
 delete_parser.set_defaults(func = delete)
 
+# Update
+update_parser = subparsers.add_parser(
+    'update',
+    help = 'Updates an entry.'
+)
+update_parser.add_argument('entryid', help = 'The entry ID or bookmark to delete.')
+update_parser.add_argument('--append', '-a', help = 'Causes note and time values to be added to current values instead of overwriting them.', action = 'store_true')
+update_parser.add_argument('--notes', '-n', help = 'The notes to set on the entry. Will overwrite current note unless passed with append argument.')
+update_parser.add_argument('--time', '-t', help = 'The accrued time to set on the entry. Will overwrite current time unless passed with append argument. In HH:MM format.')
+update_parser.add_argument('--task', '-k', help = 'The project and task ID to set on the entry.', nargs = 2, metavar = ('PROJECTID', 'TASKID'))
+update_parser.set_defaults(func = update)
+
+
 # The Parsening!
 args = parser.parse_args()
 args.func(args)
