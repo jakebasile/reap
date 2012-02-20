@@ -15,6 +15,7 @@
 import reap.api
 import keyring
 import os.path
+import getpass
 
 # Constants
 
@@ -64,7 +65,7 @@ def get_timesheet():
 # Commands
 
 def login(args):
-    password = getpass()
+    password = getpass.getpass()
     try:
         ts = reap.api.Timesheet(args.baseuri, args.username, password)
     except ValueError:
