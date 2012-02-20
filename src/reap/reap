@@ -19,7 +19,7 @@ from reap.commands import *
 
 # Parser Declarations
 parser = argparse.ArgumentParser(
-    description = 'Harvest time-tracking from the command line!'
+    description = 'A command line interface for the Harvest time tracking tool.'
 )
 subparsers = parser.add_subparsers()
 
