@@ -1,22 +1,22 @@
-# Reap. The Simple Command Line for Harvest.
+# **Reap**. The Simple Command Line for Harvest.
 
-Reap focuses on providing a simple and clear command line interface to the [Harvest](http://www.harvestapp.com) time tracking system.
+**Reap** focuses on providing a simple and clear command line interface to the [Harvest](http://www.harvestapp.com) time tracking system.
 
 ## Installation
 
-**NOTE**: Reap will currently *NOT* work in virtualenv on at least OS X, due to an issue in the upstream dependency [keyring](http://pypi.python.org/pypi/keyring). A patch has been submitted to fix the problem.
+**NOTE**: **Reap** will currently *NOT* work in virtualenv on at least OS X, due to an issue in the upstream dependency [keyring](http://pypi.python.org/pypi/keyring). A patch has been submitted to fix the problem.
 
-To install the latest released version of Reap, use Pip:
+To install the latest released version of **Reap**, use Pip:
 
     $ sudo pip install reap
 
 ## Usage
 
-The installation will add a new command to your system, `reap`. This will allow access to all of Reap's functionality.
+The installation will add a new command to your system, `reap`. This will allow access to all of **Reap**'s functionality.
 
 ### Login
 
-To use Reap, you must first login. To do so, use the `login` command.
+To use **Reap**, you must first login. To do so, use the `login` command.
 
     $ reap login baseuri username
 
@@ -24,7 +24,7 @@ Where `baseuri` is the full base domain you log in to Harvest with, such as "htt
 
 ### Help
 
-To explore Reap's commands, try:
+To explore **Reap**'s commands, try:
 
     $ reap -h
 
@@ -34,9 +34,9 @@ and for more information on other commands, try, for example:
 
 ### Working With Entries
 
-*NOTE*: In previous versions of Reap, you specified and bookmarked _tasks_, now you work with the actual _entries_.
+*NOTE*: In previous versions of **Reap**, you specified and bookmarked _tasks_, now you work with the actual _entries_.
 
-To add an entry to your time sheet, you will need to have project and task IDs you wish to associate with the entry. You can have Reap show you this information:
+To add an entry to your time sheet, you will need to have project and task IDs you wish to associate with the entry. You can have **Reap** show you this information:
 
     $ reap list
     # Projects and Tasks:
@@ -52,13 +52,13 @@ To add an entry to your time sheet, you will need to have project and task IDs y
 
 You then use those numbers in parenthesis, in that order, with the create command. You can optionally specify notes or hours already worked.
 
-    $ reap create 1929052 1244476 -n 'Maui!' -t 5:80
+    $ reap create 1929052 1244476 -n 'Maui!' -t 5:20
     # Added entry:
     Project:    Internal
     Task:       Vacation
     ID:         74563731
     Notes:      Maui!
-    Time:       6:19
+    Time:       5:20
 
 You then work with the ID value for further commands, such as updating an entry:
 
@@ -84,15 +84,14 @@ For now, you need to specify the entry ID with all of these operations, the old 
 
 ## More Help
 
-If you can't figure something out, or you think Reap is broken, send me an [email](http://www.google.com/recaptcha/mailhide/d?k=01Setbc2JX7fNIQvHb-xyRqA==&c=J27oPGH6BTxbJKfL2FXzDSIGtNL1BzvC4Xt4Jomxcss=).
+If you can't figure something out, or you think **Reap** is broken, send me an [email](http://www.google.com/recaptcha/mailhide/d?k=01Setbc2JX7fNIQvHb-xyRqA==&c=J27oPGH6BTxbJKfL2FXzDSIGtNL1BzvC4Xt4Jomxcss=).
 
 ## Future Plans
 
-In the future, I plan to add:
+In the future, I plan to:
 
 * Make working with entries easier.
-* More error checking and more useful error messages.
-* Combined command capabilities, so that you can start a task and add a note to that task in one go.
+* Add more error checking and more useful error messages.
 
 ## Changelog
 
