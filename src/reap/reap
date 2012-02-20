@@ -40,38 +40,27 @@ status_parser = subparsers.add_parser(
 status_parser.set_defaults(func = status)
 
 # Bookmark
-bookmark_parser = subparsers.add_parser(
-    'bookmark',
-    help = 'Bookmark a project and task so that it can be referred to more easily.',
-)
-bookmark_parser.add_argument('projectid', help = 'The project ID.')
-bookmark_parser.add_argument('taskid', help = 'The task ID.')
-bookmark_parser.add_argument('name', help = 'The bookmark name')
-bookmark_parser.set_defaults(func = bookmark)
+# bookmark_parser = subparsers.add_parser(
+#     'bookmark',
+#     help = 'Bookmark an entry so that it can be referred to more easily.',
+# )
+# bookmark_parser.add_argument('entryid', help = 'The entry ID.')
+# bookmark_parser.add_argument('name', help = 'The bookmark name')
+# bookmark_parser.set_defaults(func = bookmark)
 
 # Bookmarks
-bookmarks_parser = subparsers.add_parser(
-    'bookmarks',
-    help = 'Displays all bookmarks',
-)
-bookmarks_parser.set_defaults(func = bookmarks)
-
-# Note
-note_parser = subparsers.add_parser(
-    'note',
-    help = 'Adds or changes a note on a task.',
-)
-note_parser.add_argument('--append', '-a', action = 'store_true', help = 'Append to the current note instead of deleting')
-note_parser.add_argument('task', help = 'The task name or bookmark to change the note on.')
-note_parser.add_argument('note', help = 'The note text to change or append.')
-note_parser.set_defaults(func = note)
+# bookmarks_parser = subparsers.add_parser(
+#     'bookmarks',
+#     help = 'Displays all bookmarks',
+# )
+# bookmarks_parser.set_defaults(func = bookmarks)
 
 # Start
 start_parser = subparsers.add_parser(
     'start',
     help = 'Starts a timer. Will stop other timers automatically.',
 )
-start_parser.add_argument('task', help = 'The task name or bookmark to start the timer on.')
+start_parser.add_argument('entryid', help = 'The entry ID or bookmark to start the timer on.')
 start_parser.set_defaults(func = start)
 
 # Stop
@@ -81,12 +70,30 @@ stop_parser = subparsers.add_parser(
 )
 stop_parser.set_defaults(func = stop)
 
+# List
+list_parser = subparsers.add_parser(
+    'list',
+    help = 'Lists available projects and tasks.',
+)
+list_parser.set_defaults(func = list)
+
+# Create
+create_parser = subparsers.add_parser(
+    'create',
+    help = 'Creates a new entry.',
+)
+create_parser.add_argument('projectid', help = 'The project ID')
+create_parser.add_argument('taskid', help = 'The task ID')
+create_parser.add_argument('--time', '-t', help = 'Previously accrued time to add to the entry, in HH:MM format.')
+create_parser.add_argument('--notes', '-n', help = 'Notes to set on the new entry.')
+create_parser.set_defaults(func = create)
+
 # Delete
 delete_parser = subparsers.add_parser(
     'delete',
-    help = 'Deletes a task.'
+    help = 'Deletes an entry.'
 )
-delete_parser.add_argument('task', help = 'The task name or bookmark to delete.')
+delete_parser.add_argument('entryid', help = 'The entry ID or bookmark to delete.')
 delete_parser.set_defaults(func = delete)
 
 # The Parsening!
