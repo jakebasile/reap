@@ -107,6 +107,10 @@ def status(args):
                     hours = int(entry.hours),
                     minutes = int(entry.hours % 1 * 60),
                 )
+        if total:
+            total_hours = int(total)
+            total_minutes = int(total % 1 * 60)
+            print str.format('# Total Daily Hours: {}:{:02d}\n', total_hours, total_minutes)
 
 # def bookmark(args):
 #     ts = get_timesheet()
