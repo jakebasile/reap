@@ -4,8 +4,6 @@
 
 ## Installation
 
-**NOTE**: **Reap** will currently *NOT* work in virtualenv on at least OS X, due to an issue in the upstream dependency [keyring](http://pypi.python.org/pypi/keyring). A patch has been submitted to fix the problem.
-
 To install the latest released version of **Reap**, use Pip:
 
     $ sudo pip install reap
