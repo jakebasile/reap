@@ -197,8 +197,7 @@ class Harvest:
             result = urllib2.urlopen(request)
             result_json = json.load(result)
             return result_json
-        except Exception, e:
-            print e
+        except:
             return None
 
     def post_request(self, path, data):
@@ -228,11 +227,15 @@ class People:
     def __len__(self):
         return len(self.people_list)
 
-    def create(self, first_name, last_name, email):
+    def create(self, first_name, last_name, email, department = None, default_rate = None, admin = False, contractor = False):
         person = {'user':{
             'first_name': first_name,
             'last_name': last_name,
             'email': email,
+            'department': department,
+            'default_hourly_rate': default_rate,
+            'is_admin': admin,
+            'is_contractor': contractor,
         }}
         response = self.hv.post_request('people/', person)
         if response:
