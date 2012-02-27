@@ -23,6 +23,12 @@ parser = argparse.ArgumentParser(
 )
 subparsers = parser.add_subparsers()
 
+list_people_parser = subparsers.add_parser(
+    'list-people',
+    help = 'Lists all people on the account.'
+)
+list_people_parser.set_defaults(func = list_people)
+
 create_person_parser = subparsers.add_parser(
     'create-person',
     help = 'Creates a new person.',
@@ -34,8 +40,15 @@ create_person_parser.add_argument('--admin', '-a', help = 'Makes the person an a
 create_person_parser.add_argument('--contractor', '-c', help = 'Makes the person a contractor.', action = 'store_true')
 create_person_parser.add_argument('--department', '-d', help = 'Sets this person\'s department.')
 create_person_parser.add_argument('--rate', '-r', help = 'Sets this person\'s default rate.')
-
 create_person_parser.set_defaults(func = create_person)
+
+delete_person_parser = subparsers.add_parser(
+    'delete-person',
+    help = 'Deletes a person. There is no undo.'
+)
+delete_person_parser.add_argument('personid', help = 'The person\'s ID.')
+delete_person_parser.set_defaults(func = delete_person)
+
 
 # The Parsening: Part Deux: The Reckoning.
 args = parser.parse_args()

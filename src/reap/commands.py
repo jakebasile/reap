@@ -286,6 +286,25 @@ def update(args):
 
 # Admin Commands
 
+def list_people(args):
+    hv = get_harvest()
+    if hv:
+        contractors = []
+        employees = []
+        for person in hv.people():
+            if person.contractor:
+                contractors += [person]
+            else:
+                employees += [person]
+        if len(employees) > 0:
+            print '# Employees'
+            for emp in employees:
+                print str.format(PERSON_FORMAT, person = emp)
+        if len(contractors) > 0:
+            print '# Contractors'
+            for contractor in contractors:
+                print str.format(PERSON_FORMAT, person = contractor)
+
 def create_person(args):
     hv = get_harvest()
     if hv:
@@ -306,3 +325,13 @@ def create_person(args):
             )
         else:
             print 'Could not create person.'
+
+def delete_person(args):
+    hv = get_harvest()
+    if hv:
+        id = int(args.personid)
+        for person in hv.people():
+            if person.id == int(id):
+                person.delete()
+                print 'Person deleted.'
+                break
