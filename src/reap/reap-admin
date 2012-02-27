@@ -1,0 +1,42 @@
+#!/usr/bin/python
+
+# Copyright 2012 Jake Basile
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+import argparse
+from reap.commands import *
+
+# Parser Declarations
+parser = argparse.ArgumentParser(
+    description = 'A command line interface for the Harvest admin interface.'
+)
+subparsers = parser.add_subparsers()
+
+create_person_parser = subparsers.add_parser(
+    'create-person',
+    help = 'Creates a new person.',
+)
+create_person_parser.add_argument('firstname', help = 'The person\'s first name.')
+create_person_parser.add_argument('lastname', help = 'The person\'s last name.')
+create_person_parser.add_argument('email', help = 'The person\'s email address.')
+create_person_parser.add_argument('--admin', '-a', help = 'Makes the person an admin.', action = 'store_true')
+create_person_parser.add_argument('--contractor', '-c', help = 'Makes the person a contractor.', action = 'store_true')
+create_person_parser.add_argument('--department', '-d', help = 'Sets this person\'s department.')
+create_person_parser.add_argument('--rate', '-r', help = 'Sets this person\'s default rate.')
+
+create_person_parser.set_defaults(func = create_person)
+
+# The Parsening: Part Deux: The Reckoning.
+args = parser.parse_args()
+args.func(args)
