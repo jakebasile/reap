@@ -212,6 +212,18 @@ class Harvest:
         except:
             return None
 
+    def delete_request(self, path):
+        request = self.__init_request(path)
+        request.get_method = lambda: 'DELETE'
+        try:
+            result = urllib2.urlopen(request)
+            if result:
+                return True
+            else:
+                return False
+        except:
+            return None
+
     def people(self):
         people_response = self.get_request('people/')
         return People(self, people_response)
@@ -256,3 +268,7 @@ class Person:
         self.telephone = json['telephone']
         self.department = json['department']
         self.timezone = json['timezone']
+
+    def delete(self):
+        response = self.hv.delete_request('people/' + str(self.id))
+        return response

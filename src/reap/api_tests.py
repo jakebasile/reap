@@ -215,8 +215,6 @@ class TestPeople(HarvestTest):
             # self.assertIsNotNone(person.default_rate)
 
     def test_create(self):
-        people = self.hv.people()
-        self.assertIsNotNone(people)
         fn = random_string()
         ln = random_string()
         email = random_string() + '@example.com'
@@ -250,6 +248,23 @@ class TestPeople(HarvestTest):
         self.assertEqual(person.contractor, contractor)
         self.assertIsNotNone(person.telephone)
         self.assertIsNotNone(person.timezone)
+        # clean up
+        person.delete()
+
+    def test_delete(self):
+        person = self.hv.people().create(
+            random_string(),
+            random_string(),
+            random_string() + '@example.com',
+        )
+        self.assertIsNotNone(person)
+        id = person.id
+        person.delete()
+        # ensure it's no longer there.
+        for p in self.hv.people():
+            if p.id == id:
+                self.fail()
+
 
 
 if __name__ == '__main__':
