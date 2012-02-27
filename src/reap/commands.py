@@ -26,12 +26,12 @@ Notes:      {entry.notes}
 Time:       {hours}:{minutes:02d}
 '''
 
-PERSON_FORMAT = '''Name:       {person.first_name} {person.last_name}
-ID:         {person.id}
-Department: {person.department}
-Admin:      {person.admin}
-Contractor: {person.contractor}
-Rate:       {person.default_rate}
+PERSON_FORMAT = '''Name:           {person.first_name} {person.last_name}
+ID:             {person.id}
+Department:     {person.department}
+Admin:          {person.admin}
+Contractor:     {person.contractor}
+Rate:           {person.default_rate}
 '''
 
 # Support Functions
