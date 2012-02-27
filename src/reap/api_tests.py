@@ -21,22 +21,22 @@ from reap.api import *
 def random_string(length = 5):
     return ''.join(random.choice(string.ascii_lowercase) for x in xrange(length))
 
-class ReapTest(unittest.TestCase):
+class TimesheetTest(unittest.TestCase):
     def setUp(self):
         # You need to have valid account info in an info.txt file to run tests.
         with open('info.txt') as info:
             self.base_uri = info.readline().strip()
             self.username = info.readline().strip()
             self.password = info.readline().strip()
-            self.ts = Timesheet(self.base_uri, self.username, self.password)
+        self.ts = Timesheet(self.base_uri, self.username, self.password)
 
-class TestLogin(ReapTest):
+class TestTimesheetLogin(TimesheetTest):
     def runTest(self):
         ts = Timesheet(self.base_uri, self.username, self.password)
         self.assertIsNotNone(ts)
         self.assertRaises(ValueError, Timesheet, random_string(), random_string(), random_string())
 
-class TestProjectTask(ReapTest):
+class TestProjectTask(TimesheetTest):
     def test_get_projects(self):
         projs = self.ts.projects()
         self.assertIsNotNone(projs)
@@ -58,7 +58,7 @@ class TestProjectTask(ReapTest):
                 self.assertIsNotNone(task.id)
                 self.assertIsNotNone(task.billable)
 
-class TestEntry(ReapTest):
+class TestEntry(TimesheetTest):
     def test_get(self):
         entries = self.ts.entries()
         self.assertIsNotNone(entries)
@@ -178,6 +178,42 @@ class TestEntry(ReapTest):
         self.assertIsNotNone(new_entry)
         self.assertTrue(new_entry.started)
         entry.delete()
+
+class HarvestTest(unittest.TestCase):
+    def setUp(self):
+        # You need to have valid account info in an info.txt file to run tests.
+        with open('info.txt') as info:
+            self.base_uri = info.readline().strip()
+            self.username = info.readline().strip()
+            self.password = info.readline().strip()
+        self.hv = Harvest(self.base_uri, self.username, self.password)
+
+class TestHarvestLogin(HarvestTest):
+    def runTest(self):
+        hv = Harvest(self.base_uri, self.username, self.password)
+        self.assertIsNotNone(hv)
+        self.assertRaises(ValueError, Harvest, random_string(), random_string(), random_string())
+
+class TestPeople(HarvestTest):
+    def test_get(self):
+        people = self.hv.people()
+        self.assertIsNotNone(people)
+        for person in people:
+            self.assertIsNotNone(person)
+            self.assertIsNotNone(person.id)
+            self.assertIsNotNone(person.email)
+            self.assertIsNotNone(person.first_name)
+            self.assertIsNotNone(person.last_name)
+            self.assertIsNotNone(person.all_future)
+            self.assertIsNotNone(person.active)
+            self.assertIsNotNone(person.admin)
+            self.assertIsNotNone(person.contractor)
+            self.assertIsNotNone(person.telephone)
+            self.assertIsNotNone(person.timezone)
+            # optional ones
+            # self.assertIsNotNone(person.department)
+            # self.assertIsNotNone(person.default_rate)
+
 
 if __name__ == '__main__':
     unittest.main()
