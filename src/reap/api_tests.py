@@ -214,6 +214,26 @@ class TestPeople(HarvestTest):
             # self.assertIsNotNone(person.department)
             # self.assertIsNotNone(person.default_rate)
 
+    def test_create(self):
+        people = self.hv.people()
+        self.assertIsNotNone(people)
+        person = self.hv.people().create(
+            random_string(),
+            random_string(),
+            random_string() + '@example.com',
+        )
+        self.assertIsNotNone(person)
+        self.assertIsNotNone(person)
+        self.assertIsNotNone(person.id)
+        self.assertIsNotNone(person.email)
+        self.assertIsNotNone(person.first_name)
+        self.assertIsNotNone(person.last_name)
+        self.assertIsNotNone(person.all_future)
+        self.assertIsNotNone(person.active)
+        self.assertIsNotNone(person.admin)
+        self.assertIsNotNone(person.contractor)
+        self.assertIsNotNone(person.telephone)
+        self.assertIsNotNone(person.timezone)
 
 if __name__ == '__main__':
     unittest.main()

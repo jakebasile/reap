@@ -197,7 +197,8 @@ class Harvest:
             result = urllib2.urlopen(request)
             result_json = json.load(result)
             return result_json
-        except:
+        except Exception, e:
+            print e
             return None
 
     def post_request(self, path, data):
@@ -205,13 +206,15 @@ class Harvest:
         try:
             request.add_data(json.dumps(data))
             result = urllib2.urlopen(request)
+            if result.code == 201:
+                return self.get_request(result.headers.getheader('Location')[1:])
             result_json = json.load(result)
             return result_json
         except:
             return None
 
     def people(self):
-        people_response = self.get_request('people')
+        people_response = self.get_request('people/')
         return People(self, people_response)
 
 class People:
@@ -224,6 +227,16 @@ class People:
 
     def __len__(self):
         return len(self.people_list)
+
+    def create(self, first_name, last_name, email):
+        person = {'user':{
+            'first_name': first_name,
+            'last_name': last_name,
+            'email': email,
+        }}
+        response = self.hv.post_request('people/', person)
+        if response:
+            return Person(self.hv, response['user'])
 
 class Person:
     def __init__(self, hv, json):
