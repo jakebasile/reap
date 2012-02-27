@@ -26,6 +26,14 @@ Notes:      {entry.notes}
 Time:       {hours}:{minutes:02d}
 '''
 
+PERSON_FORMAT = '''Name:       {person.first_name} {person.last_name}
+ID:         {person.id}
+Department: {person.department}
+Admin:      {person.admin}
+Contractor: {person.contractor}
+Rate:       {person.default_rate}
+'''
+
 # Support Functions
 
 def save_info(base_uri, username):
@@ -61,6 +69,14 @@ def get_timesheet():
         username = info[1]
         passwd = keyring.get_password(base_uri, username)
         return reap.api.Timesheet(base_uri, username, passwd)
+
+def get_harvest():
+    info = load_info()
+    if info:
+        base_uri = info[0]
+        username = info[1]
+        passwd = keyring.get_password(base_uri, username)
+        return reap.api.Harvest(base_uri, username, passwd)
 
 # Commands
 
@@ -268,3 +284,25 @@ def update(args):
         else:
             print 'No entry with that ID.'
 
+# Admin Commands
+
+def create_person(args):
+    hv = get_harvest()
+    if hv:
+        person = hv.people().create(
+            args.firstname,
+            args.lastname,
+            args.email,
+            admin = args.admin or False,
+            contractor = args.contractor or False,
+            department = args.department,
+            default_rate = float(args.rate),
+        )
+        if person:
+            print '# Created person:'
+            print str.format(
+                PERSON_FORMAT,
+                person = person,
+            )
+        else:
+            print 'Could not create person.'
