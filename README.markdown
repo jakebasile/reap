@@ -80,6 +80,26 @@ Or deleting an entry:
 
 For now, you need to specify the entry ID with all of these operations, the old regular expression search is gone until I figure out what to do with it.
 
+## Administration
+
+**Reap** now includes the beginnings of a basic administrative interface, under the `reap-admin` command. At the moment, it supports creating, listing, and deleting users. For example, the following command creates a new administrative user named "Mean Guy" in the department of Firings, with the email meanguy@example.com and the hourly rate of $150.00:
+
+    $ reap-admin create-person -a -d 'Firings Department' -r 150.00 Mean Guy meanguy@example.com
+    # Created person:
+    Name:           Mean Guy
+    ID:             315700
+    Department:     Firings Department
+    Admin:          True
+    Contractor:     False
+    Rate:           150.0
+
+You can similarly delete users with the `delete-person` command:
+
+    $ reap-admin delete-person 315700
+    Person deleted.
+
+For more information, run `reap-admin -h`.
+
 ## More Help
 
 If you can't figure something out, or you think **Reap** is broken, send me an [email](http://www.google.com/recaptcha/mailhide/d?k=01Setbc2JX7fNIQvHb-xyRqA==&c=J27oPGH6BTxbJKfL2FXzDSIGtNL1BzvC4Xt4Jomxcss=).
