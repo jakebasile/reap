@@ -12,12 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import reap.api
 import keyring
-import os.path
 import getpass
-
-# Constants
+import urllib2
+import reap.api.timesheet
+from reap.commands.support import *
 
 STATUS_TASK_FORMAT = '''Project:    {entry.project_name}
 Task:       {entry.task_name}
@@ -25,30 +24,6 @@ ID:         {entry.id}
 Notes:      {entry.notes}
 Time:       {hours}:{minutes:02d}
 '''
-
-PERSON_FORMAT = '''Name:           {person.first_name} {person.last_name}
-ID:             {person.id}
-Department:     {person.department}
-Admin:          {person.admin}
-Contractor:     {person.contractor}
-Rate:           {person.default_rate}
-'''
-
-# Support Functions
-
-def save_info(base_uri, username):
-    with open(os.path.expanduser('~/.reaprc'), 'w') as file:
-        file.write(base_uri + '\n')
-        file.write(username + '\n')
-
-def load_info():
-    if os.path.exists(os.path.expanduser('~/.reaprc')):
-        with open(os.path.expanduser('~/.reaprc'), 'r') as file:
-            base_uri = file.readline().strip()
-            username = file.readline().strip()
-            return (base_uri, username)
-    else:
-        print 'Please login first.'
 
 # def save_bookmarks(bookmarks):
 #     with open(expanduser('~/.reapbkmrks'), 'w') as file:
@@ -68,22 +43,12 @@ def get_timesheet():
         base_uri = info[0]
         username = info[1]
         passwd = keyring.get_password(base_uri, username)
-        return reap.api.Timesheet(base_uri, username, passwd)
-
-def get_harvest():
-    info = load_info()
-    if info:
-        base_uri = info[0]
-        username = info[1]
-        passwd = keyring.get_password(base_uri, username)
-        return reap.api.Harvest(base_uri, username, passwd)
-
-# Commands
+        return reap.api.timesheet.Timesheet(base_uri, username, passwd)
 
 def login(args):
     password = getpass.getpass()
     try:
-        ts = reap.api.Timesheet(args.baseuri, args.username, password)
+        ts = reap.api.timesheet.Timesheet(args.baseuri, args.username, password)
     except ValueError:
         print 'Invalid Credentials.'
         return
@@ -284,54 +249,3 @@ def update(args):
         else:
             print 'No entry with that ID.'
 
-# Admin Commands
-
-def list_people(args):
-    hv = get_harvest()
-    if hv:
-        contractors = []
-        employees = []
-        for person in hv.people():
-            if person.contractor:
-                contractors += [person]
-            else:
-                employees += [person]
-        if len(employees) > 0:
-            print '# Employees'
-            for emp in employees:
-                print str.format(PERSON_FORMAT, person = emp)
-        if len(contractors) > 0:
-            print '# Contractors'
-            for contractor in contractors:
-                print str.format(PERSON_FORMAT, person = contractor)
-
-def create_person(args):
-    hv = get_harvest()
-    if hv:
-        person = hv.people().create(
-            args.firstname,
-            args.lastname,
-            args.email,
-            admin = args.admin or False,
-            contractor = args.contractor or False,
-            department = args.department,
-            default_rate = float(args.rate),
-        )
-        if person:
-            print '# Created person:'
-            print str.format(
-                PERSON_FORMAT,
-                person = person,
-            )
-        else:
-            print 'Could not create person.'
-
-def delete_person(args):
-    hv = get_harvest()
-    if hv:
-        id = int(args.personid)
-        for person in hv.people():
-            if person.id == int(id):
-                person.delete()
-                print 'Person deleted.'
-                break
