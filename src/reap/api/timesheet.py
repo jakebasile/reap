@@ -12,15 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import urllib2
-import json
-import base64
-import datetime
+from reap.api.base import ReapBase, parse_time
 
-def parse_time(timestr):
-    return datetime.datetime.strptime(timestr, '%Y-%m-%dT%H:%M:%SZ')
-
-class Timesheet:
+class Timesheet(ReapBase):
     def __init__(self, base_uri, username, password):
         self.base_uri = base_uri
         self.username = username
@@ -28,35 +22,6 @@ class Timesheet:
         login_response = self.get_request('account/who_am_i')
         if not login_response:
             raise ValueError('Unable to login with given info.')
-
-    def __init_request(self, path):
-        auth = base64.b64encode(self.username + ':' + self.password)
-        uri = self.base_uri + path
-        request = urllib2.Request(uri)
-        request.add_header('Content-Type', 'application/json')
-        request.add_header('Accept', 'application/json')
-        request.add_header('Authorization', 'Basic ' + auth)
-        request.add_header('User-Agent', 'reap')
-        return request
-
-    def get_request(self, path):
-        request = self.__init_request(path)
-        try:
-            result = urllib2.urlopen(request)
-            result_json = json.load(result)
-            return result_json
-        except:
-            return None
-
-    def post_request(self, path, data):
-        request = self.__init_request(path)
-        try:
-            request.add_data(json.dumps(data))
-            result = urllib2.urlopen(request)
-            result_json = json.load(result)
-            return result_json
-        except:
-            return None
 
     def projects(self):
         projects_response = self.get_request('daily')
@@ -169,106 +134,3 @@ class Entry:
             if response:
                 new_info = self.ts.get_request('daily/show/' + str(self.id))
                 self.__parse_json(new_info)
-
-class Harvest:
-    def __init__(self, base_uri, username, password):
-        self.base_uri = base_uri
-        self.username = username
-        self.password = password
-        login_response = self.get_request('account/who_am_i')
-        if not login_response:
-            raise ValueError('Unable to login with given info.')
-        if not login_response['user']['admin']:
-            raise ValueError('User is not an admin')
-
-    def __init_request(self, path):
-        auth = base64.b64encode(self.username + ':' + self.password)
-        uri = self.base_uri + path
-        request = urllib2.Request(uri)
-        request.add_header('Content-Type', 'application/json')
-        request.add_header('Accept', 'application/json')
-        request.add_header('Authorization', 'Basic ' + auth)
-        request.add_header('User-Agent', 'reap')
-        return request
-
-    def get_request(self, path):
-        request = self.__init_request(path)
-        try:
-            result = urllib2.urlopen(request)
-            result_json = json.load(result)
-            return result_json
-        except:
-            return None
-
-    def post_request(self, path, data):
-        request = self.__init_request(path)
-        try:
-            request.add_data(json.dumps(data))
-            result = urllib2.urlopen(request)
-            if result.code == 201:
-                return self.get_request(result.headers.getheader('Location')[1:])
-            result_json = json.load(result)
-            return result_json
-        except:
-            return None
-
-    def delete_request(self, path):
-        request = self.__init_request(path)
-        request.get_method = lambda: 'DELETE'
-        try:
-            result = urllib2.urlopen(request)
-            if result:
-                return True
-            else:
-                return False
-        except:
-            return None
-
-    def people(self):
-        people_response = self.get_request('people/')
-        return People(self, people_response)
-
-class People:
-    def __init__(self, hv, json):
-        self.hv = hv
-        self.people_list = [Person(hv, pjson['user']) for pjson in json]
-
-    def __iter__(self):
-        return iter(self.people_list)
-
-    def __len__(self):
-        return len(self.people_list)
-
-    def create(self, first_name, last_name, email, department = None, default_rate = None, admin = False, contractor = False):
-        person = {'user':{
-            'first_name': first_name,
-            'last_name': last_name,
-            'email': email,
-            'department': department,
-            'default_hourly_rate': default_rate,
-            'is_admin': admin,
-            'is_contractor': contractor,
-        }}
-        response = self.hv.post_request('people/', person)
-        if response:
-            return Person(self.hv, response['user'])
-
-class Person:
-    def __init__(self, hv, json):
-        self.hv = hv
-        self.id = json['id']
-        self.email = json['email']
-        self.first_name = json['first_name']
-        self.last_name = json['last_name']
-        self.all_future = json['has_access_to_all_future_projects']
-        self.default_rate = json['default_hourly_rate']
-        self.active = json['is_active']
-        self.admin = json['is_admin']
-        self.contractor = json['is_contractor']
-        self.telephone = json['telephone']
-        self.department = json['department']
-        self.timezone = json['timezone']
-
-    def delete(self):
-        response = self.hv.delete_request('people/' + str(self.id))
-        return response
