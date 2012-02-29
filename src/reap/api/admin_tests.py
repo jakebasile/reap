@@ -128,6 +128,27 @@ class TestProjects(HarvestTest):
             self.assertIsNotNone(project.updated)
             self.assertIsNotNone(project.created)
 
+class TestClients(HarvestTest):
+    def test_get(self):
+        clients = self.hv.clients()
+        self.assertIsNotNone(clients)
+        for client in clients:
+            self.assertIsNotNone(client.name)
+            self.assertIsNotNone(client.created)
+            self.assertIsNotNone(client.updated)
+            self.assertIsNotNone(client.id)
+            self.assertTrue(hasattr(client, 'highrise_id'))
+            self.assertIsNotNone(client.cache_version)
+            self.assertIsNotNone(client.currency)
+            self.assertIsNotNone(client.active)
+            self.assertIsNotNone(client.currency_symbol)
+            self.assertIsNotNone(client.details)
+            self.assertTrue(hasattr(client, 'invoice_timeframe'))
+            if client.invoice_timeframe:
+                self.assertIsNotNone(client.invoice_timeframe[0])
+                self.assertIsNotNone(client.invoice_timeframe[1])
+            self.assertTrue(hasattr(client, 'last_invoice_kind'))
+
 
 if __name__ == '__main__':
     unittest.main()
