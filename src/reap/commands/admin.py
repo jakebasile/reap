@@ -31,6 +31,16 @@ ID:             {client.id}
 Details:        {client.details}
 '''
 
+PROJECT_FORMAT = '''Name:       {project.name}
+ID:         {project.id}
+ClientID:   {project.client_id}
+Billable:   {project.billable}
+Bill-By:    {project.bill_by}
+Rate:       {project.hourly_rate}
+Budget:     {project.budget}
+Notes:      {project.notes}
+'''
+
 def get_harvest():
     info = load_info()
     if info:
@@ -107,3 +117,23 @@ def list_clients(args):
             print '# Inactive Clients'
             for inact in inactive:
                 print str.format(CLIENT_FORMAT, client = inact)
+
+def list_projects(args):
+    hv = get_harvest()
+    if hv:
+        active = []
+        inactive = []
+        for proj in hv.projects():
+            if proj.active:
+                active += [proj]
+            else:
+                inactive += [proj]
+        if len(active) > 0:
+            print '# Active Projects'
+            for act in active:
+                print str.format(PROJECT_FORMAT, project = act)
+        if len(inactive) > 0:
+            print '# Inactive Projects'
+            for inact in inactive:
+                print str.format(PROJECT_FORMAT, project = inact)
+
