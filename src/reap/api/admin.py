@@ -93,7 +93,24 @@ class Projects:
     def __len__(self):
         return len(self.project_list)
 
+    def create(self, name, client_id, bill_by = 'none', budget = None, budget_by = 'none', notes = None):
+        project = {'project':{
+            'name': name,
+            'client_id': client_id,
+            'bill_by': bill_by,
+            'budget_by': budget_by,
+            'budget': budget,
+            'notes': notes,
+        }}
+        response = self.hv.post_request('projects/', project, follow = True)
+        if response:
+            return Project(self.hv, response['project'])
+
 class Project:
+    BILL_BY_TYPE = ['Tasks', 'People', 'none']
+
+    BUDGET_BY_TYPE = ['project', 'project_cost', 'task', 'person', 'none']
+
     def __init__(self, hv, json):
         self.hv = hv
         self.id = json['id']
@@ -106,11 +123,15 @@ class Project:
         self.code = json['code']
         self.notes = json['notes']
         self.budget_by = json['budget_by']
-        self.budget = json['budget']
+        self.budget = float(json['budget']) if json['budget'] else None
         self.latest_record = parse_short_time(json['hint-latest-record-at'])
         self.earliest_record = parse_short_time(json['hint-earliest-record-at'])
         self.created = parse_time(json['created_at'])
         self.updated = parse_time(json['updated_at'])
+
+    def delete(self):
+        response = self.hv.delete_request('projects/' + str(self.id))
+        return response
 
 class Clients:
     def __init__(self, hv, json):
@@ -122,6 +143,9 @@ class Clients:
 
     def __len__(self):
         return len(self.client_list)
+
+    def __getitem__(self, index):
+        return self.client_list[index]
 
 class Client:
     def __init__(self, hv, json):

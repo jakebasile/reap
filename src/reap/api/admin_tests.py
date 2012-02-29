@@ -128,6 +128,46 @@ class TestProjects(HarvestTest):
             self.assertIsNotNone(project.updated)
             self.assertIsNotNone(project.created)
 
+    def test_create(self):
+        name = random_string()
+        bill_by = random.choice(Project.BILL_BY_TYPE)
+        budget_by = random.choice(Project.BUDGET_BY_TYPE)
+        client_id = random.choice(self.hv.clients()).id
+        notes = random_string()
+        budget = round(random.random() * 100, 2)
+        project = self.hv.projects().create(
+            name,
+            client_id,
+            bill_by = bill_by,
+            budget = budget,
+            budget_by = budget_by,
+            notes = notes,
+        )
+        self.assertIsNotNone(project)
+        self.assertEqual(project.name, name)
+        self.assertEqual(project.client_id, client_id)
+        self.assertEqual(project.bill_by, bill_by)
+        self.assertEqual(project.budget, budget)
+        self.assertEqual(project.budget_by, budget_by)
+        self.assertEqual(project.notes, notes)
+        # clean up
+        project.delete()
+
+    def test_delete(self):
+        name = random_string()
+        client_id = random.choice(self.hv.clients()).id
+        project = self.hv.projects().create(
+            name,
+            client_id,
+        )
+        self.assertIsNotNone(project)
+        id = project.id
+        project.delete()
+        # ensure it's not on the server.
+        for proj in self.hv.projects():
+            if proj.id == id:
+                self.fail()
+
 class TestClients(HarvestTest):
     def test_get(self):
         clients = self.hv.clients()
