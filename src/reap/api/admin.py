@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from reap.api.base import ReapBase, parse_time
+from reap.api.base import ReapBase, parse_time, parse_short_time
 
 class Harvest(ReapBase):
     def __init__(self, base_uri, username, password):
@@ -28,6 +28,10 @@ class Harvest(ReapBase):
     def people(self):
         people_response = self.get_request('people/')
         return People(self, people_response)
+
+    def projects(self):
+        projects_response = self.get_request('projects/')
+        return Projects(self, projects_response)
 
 class People:
     def __init__(self, hv, json):
@@ -73,3 +77,33 @@ class Person:
     def delete(self):
         response = self.hv.delete_request('people/' + str(self.id))
         return response
+
+class Projects:
+    def __init__(self, hv, json):
+        self.hv = hv
+        self.project_list = [Project(hv, pjson['project']) for pjson in json]
+
+    def __iter__(self):
+        return iter(self.project_list)
+
+    def __len__(self):
+        return len(self.project_list)
+
+class Project:
+    def __init__(self, hv, json):
+        self.hv = hv
+        self.id = json['id']
+        self.name = json['name']
+        self.active = json['active']
+        self.billable = json['billable']
+        self.bill_by = json['bill_by']
+        self.hourly_rate = json['hourly_rate']
+        self.client_id = json['client_id']
+        self.code = json['code']
+        self.notes = json['notes']
+        self.budget_by = json['budget_by']
+        self.budget = json['budget']
+        self.latest_record = parse_short_time(json['hint-latest-record-at'])
+        self.earliest_record = parse_short_time(json['hint-earliest-record-at'])
+        self.created = parse_time(json['created_at'])
+        self.updated = parse_time(json['updated_at'])

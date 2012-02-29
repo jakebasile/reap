@@ -107,6 +107,27 @@ class TestPeople(HarvestTest):
             if p.id == id:
                 self.fail()
 
+class TestProjects(HarvestTest):
+    def test_get(self):
+        projects = self.hv.projects()
+        self.assertIsNotNone(projects)
+        for project in projects:
+            self.assertIsNotNone(project.id)
+            self.assertIsNotNone(project.name)
+            self.assertIsNotNone(project.active)
+            self.assertIsNotNone(project.billable)
+            self.assertIsNotNone(project.bill_by)
+            self.assertTrue(hasattr(project, 'hourly_rate'))
+            self.assertIsNotNone(project.client_id)
+            self.assertTrue(hasattr(project, 'code'))
+            self.assertTrue(hasattr(project, 'notes'))
+            self.assertIsNotNone(project.budget_by)
+            self.assertTrue(hasattr(project, 'budget'))
+            self.assertIsNotNone(project.latest_record)
+            self.assertIsNotNone(project.earliest_record)
+            self.assertIsNotNone(project.updated)
+            self.assertIsNotNone(project.created)
+
 
 if __name__ == '__main__':
     unittest.main()

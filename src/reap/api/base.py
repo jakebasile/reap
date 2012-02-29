@@ -20,6 +20,9 @@ import datetime
 def parse_time(timestr):
     return datetime.datetime.strptime(timestr, '%Y-%m-%dT%H:%M:%SZ')
 
+def parse_short_time(timestr):
+    return datetime.datetime.strptime(timestr, '%Y-%m-%d')
+
 class ReapBase:
     def __init_request(self, path):
         auth = base64.b64encode(self.username + ':' + self.password)
