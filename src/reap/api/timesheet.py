@@ -33,6 +33,17 @@ class Timesheet(ReapBase):
         entries = Entries(self, entries_response['day_entries'])
         return entries
 
+    def create_entry(self, project_id, task_id, hours = 0, notes = ''):
+        entry = {
+            'project_id': project_id,
+            'task_id': task_id,
+            'hours': hours,
+            'notes': notes,
+        }
+        response = self.post_request('daily/add', entry)
+        if response:
+            return Entry(self, response)
+
 class Project:
     def __init__(self, json):
         self.name = json['name']
@@ -61,17 +72,6 @@ class Entries:
 
     def __len__(self):
         return len(self.entry_list)
-
-    def create(self, task, hours = 0, notes = ''):
-        entry = {
-            'project_id': task.project.id,
-            'task_id': task.id,
-            'hours': hours,
-            'notes': notes,
-        }
-        response = self.ts.post_request('daily/add', entry)
-        if response:
-            return Entry(self.ts, response)
 
 class Entry:
     def __init__(self, ts, json):

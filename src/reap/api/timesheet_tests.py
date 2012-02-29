@@ -81,7 +81,7 @@ class TestEntry(TimesheetTest):
     def test_create(self):
         project = self.ts.projects()[0]
         task = project.tasks()[0]
-        entry = self.ts.entries().create(task)
+        entry = self.ts.create_entry(project.id, task.id)
         self.assertIsNotNone(entry)
         self.assertTrue(entry.started)
         self.assertEqual(entry.project_id, project.id)
@@ -91,7 +91,9 @@ class TestEntry(TimesheetTest):
 
     def test_delete(self):
         entries_count = len(self.ts.entries())
-        entry = self.ts.entries().create(self.ts.projects()[0].tasks()[0])
+        project = self.ts.projects()[0]
+        task = project.tasks()[0]
+        entry = self.ts.create_entry(project.id, task.id)
         self.assertEqual(entries_count + 1, len(self.ts.entries()))
         entry.delete()
         self.assertEqual(entries_count, len(self.ts.entries()))
@@ -99,7 +101,7 @@ class TestEntry(TimesheetTest):
     def test_update_notes(self):
         project = self.ts.projects()[0]
         task = project.tasks()[0]
-        entry = self.ts.entries().create(task)
+        entry = self.ts.create_entry(project.id, task.id)
         orig_notes = entry.notes
         new_note = random_string()
         entry.update(notes = new_note)
@@ -116,7 +118,7 @@ class TestEntry(TimesheetTest):
     def test_update_hours(self):
         project = self.ts.projects()[0]
         task = project.tasks()[0]
-        entry = self.ts.entries().create(task)
+        entry = self.ts.create_entry(project.id, task.id)
         orig_hours = entry.hours
         new_hours = random.randint(0, 23)
         entry.update(hours = new_hours)
@@ -136,7 +138,7 @@ class TestEntry(TimesheetTest):
         task = project.tasks()[0]
         new_proj = projects[1]
         new_task = new_proj.tasks()[0]
-        entry = self.ts.entries().create(task)
+        entry = self.ts.create_entry(project.id, task.id)
         entry.update(project_id = new_proj.id, task_id = new_task.id)
         self.assertEqual(new_proj.id, entry.project_id)
         self.assertEqual(new_proj.name, entry.project_name)
@@ -155,7 +157,7 @@ class TestEntry(TimesheetTest):
     def test_timer(self):
         project = self.ts.projects()[0]
         task = project.tasks()[0]
-        entry = self.ts.entries().create(task)
+        entry = self.ts.create_entry(project.id, task.id)
         # it starts out running after creation.
         self.assertTrue(entry.started)
         entry.stop()

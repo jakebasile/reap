@@ -37,6 +37,33 @@ class Harvest(ReapBase):
         clients_response = self.get_request('clients/')
         return Clients(self, clients_response)
 
+    def create_person(self, first_name, last_name, email, department = None, default_rate = None, admin = False, contractor = False):
+        person = {'user':{
+            'first_name': first_name,
+            'last_name': last_name,
+            'email': email,
+            'department': department,
+            'default_hourly_rate': default_rate,
+            'is_admin': admin,
+            'is_contractor': contractor,
+        }}
+        response = self.post_request('people/', person, follow = True)
+        if response:
+            return Person(self, response['user'])
+
+    def create_project(self, name, client_id, bill_by = 'none', budget = None, budget_by = 'none', notes = None):
+        project = {'project':{
+            'name': name,
+            'client_id': client_id,
+            'bill_by': bill_by,
+            'budget_by': budget_by,
+            'budget': budget,
+            'notes': notes,
+        }}
+        response = self.post_request('projects/', project, follow = True)
+        if response:
+            return Project(self, response['project'])
+
 class People:
     def __init__(self, hv, json):
         self.hv = hv
@@ -47,20 +74,6 @@ class People:
 
     def __len__(self):
         return len(self.people_list)
-
-    def create(self, first_name, last_name, email, department = None, default_rate = None, admin = False, contractor = False):
-        person = {'user':{
-            'first_name': first_name,
-            'last_name': last_name,
-            'email': email,
-            'department': department,
-            'default_hourly_rate': default_rate,
-            'is_admin': admin,
-            'is_contractor': contractor,
-        }}
-        response = self.hv.post_request('people/', person, follow = True)
-        if response:
-            return Person(self.hv, response['user'])
 
 class Person:
     def __init__(self, hv, json):
@@ -92,19 +105,6 @@ class Projects:
 
     def __len__(self):
         return len(self.project_list)
-
-    def create(self, name, client_id, bill_by = 'none', budget = None, budget_by = 'none', notes = None):
-        project = {'project':{
-            'name': name,
-            'client_id': client_id,
-            'bill_by': bill_by,
-            'budget_by': budget_by,
-            'budget': budget,
-            'notes': notes,
-        }}
-        response = self.hv.post_request('projects/', project, follow = True)
-        if response:
-            return Project(self.hv, response['project'])
 
 class Project:
     BILL_BY_TYPE = ['Tasks', 'People', 'none']

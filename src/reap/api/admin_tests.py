@@ -64,7 +64,7 @@ class TestPeople(HarvestTest):
         admin = bool(random.getrandbits(1))
         department = random_string()
         default_rate = random.random() * 10
-        person = self.hv.people().create(
+        person = self.hv.create_person(
             fn,
             ln,
             email,
@@ -94,7 +94,7 @@ class TestPeople(HarvestTest):
         person.delete()
 
     def test_delete(self):
-        person = self.hv.people().create(
+        person = self.hv.create_person(
             random_string(),
             random_string(),
             random_string() + '@example.com',
@@ -135,7 +135,7 @@ class TestProjects(HarvestTest):
         client_id = random.choice(self.hv.clients()).id
         notes = random_string()
         budget = round(random.random() * 100, 2)
-        project = self.hv.projects().create(
+        project = self.hv.create_project(
             name,
             client_id,
             bill_by = bill_by,
@@ -156,7 +156,7 @@ class TestProjects(HarvestTest):
     def test_delete(self):
         name = random_string()
         client_id = random.choice(self.hv.clients()).id
-        project = self.hv.projects().create(
+        project = self.hv.create_project(
             name,
             client_id,
         )

@@ -171,7 +171,7 @@ def create(args):
             if proj.id == int(args.projectid):
                 for task in proj.tasks():
                     if task.id == int(args.taskid):
-                        entry = ts.entries().create(task, hours = dec_time, notes = notes)
+                        entry = ts.create_entry(proj.id, task.id, hours = dec_time, notes = notes)
                         print '# Added entry:'
                         print str.format(
                             STATUS_TASK_FORMAT,
