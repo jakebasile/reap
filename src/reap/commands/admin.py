@@ -71,14 +71,14 @@ def list_people(args):
 def create_person(args):
     hv = get_harvest()
     if hv:
-        person = hv.people().create(
+        person = hv.create_person(
             args.firstname,
             args.lastname,
             args.email,
             admin = args.admin or False,
             contractor = args.contractor or False,
             department = args.department,
-            default_rate = float(args.rate),
+            default_rate = float(args.rate) if args.rate else None,
         )
         if person:
             print '# Created person:'
