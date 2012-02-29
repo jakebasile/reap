@@ -33,6 +33,10 @@ class Harvest(ReapBase):
         projects_response = self.get_request('projects/')
         return Projects(self, projects_response)
 
+    def clients(self):
+        clients_response = self.get_request('clients/')
+        return Clients(self, clients_response)
+
 class People:
     def __init__(self, hv, json):
         self.hv = hv
@@ -107,3 +111,37 @@ class Project:
         self.earliest_record = parse_short_time(json['hint-earliest-record-at'])
         self.created = parse_time(json['created_at'])
         self.updated = parse_time(json['updated_at'])
+
+class Clients:
+    def __init__(self, hv, json):
+        self.hv = hv
+        self.client_list = [Client(hv, cjson['client']) for cjson in json]
+
+    def __iter__(self):
+        return iter(self.client_list)
+
+    def __len__(self):
+        return len(self.client_list)
+
+class Client:
+    def __init__(self, hv, json):
+        self.hv = hv
+        self.name = json['name']
+        self.id = json['id']
+        self.created = parse_time(json['created_at'])
+        self.updated = parse_time(json['updated_at'])
+        self.highrise_id = json['highrise_id']
+        self.cache_version = json['cache_version']
+        self.currency = json['currency']
+        self.currency_symbol = json['currency_symbol']
+        self.active = json['active']
+        self.details = json['details']
+        timeframes = json['default_invoice_timeframe']
+        if timeframes:
+            self.invoice_timeframe = (
+                parse_short_time(timeframes[0]),
+                parse_short_times(timeframes[1])
+            )
+        else:
+            self.invoice_timeframe = None
+        self.last_invoice_kind = json['last_invoice_kind']
