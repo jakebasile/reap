@@ -59,6 +59,13 @@ list_clients_parser = subparsers.add_parser(
 )
 list_clients_parser.set_defaults(func = list_clients)
 
+# List Projects
+list_projects_parser = subparsers.add_parser(
+    'list-projects',
+    help = 'Lists all projects on the account.'
+)
+list_projects_parser.set_defaults(func = list_projects)
+
 
 # The Parsening: Part Deux: The Reckoning.
 args = parser.parse_args()
