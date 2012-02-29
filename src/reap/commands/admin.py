@@ -26,6 +26,11 @@ Contractor:     {person.contractor}
 Rate:           {person.default_rate}
 '''
 
+CLIENT_FORMAT = '''Name:           {client.name}
+ID:             {client.id}
+Details:        {client.details}
+'''
+
 def get_harvest():
     info = load_info()
     if info:
@@ -84,3 +89,21 @@ def delete_person(args):
                 print 'Person deleted.'
                 break
 
+def list_clients(args):
+    hv = get_harvest()
+    if hv:
+        active = []
+        inactive = []
+        for client in hv.clients():
+            if client.active:
+                active += [client]
+            else:
+                inactive += [client]
+        if len(active) > 0:
+            print '# Active Clients'
+            for act in active:
+                print str.format(CLIENT_FORMAT, client = act)
+        if len(inactive) > 0:
+            print '# Inactive Clients'
+            for inact in inactive:
+                print str.format(CLIENT_FORMAT, client = inact)
