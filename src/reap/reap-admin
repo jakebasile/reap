@@ -16,6 +16,7 @@
 
 import argparse
 from reap.commands.admin import *
+from reap.api.admin import Project
 
 # Parser Declarations
 parser = argparse.ArgumentParser(
@@ -65,6 +66,26 @@ list_projects_parser = subparsers.add_parser(
     help = 'Lists all projects on the account.'
 )
 list_projects_parser.set_defaults(func = list_projects)
+
+# Create Project
+create_project_parser = subparsers.add_parser(
+    'create-project',
+    help = 'Creates a project for the given client.'
+)
+create_project_parser.add_argument('clientid', help = 'The Client ID to create the project under.')
+create_project_parser.add_argument('name', help = 'The name of the project.')
+create_project_parser.add_argument('--note', '-n', help = 'Notes on the project.')
+create_project_parser.add_argument('--budget', '-b', help = 'The project\'s budget.', type = float)
+create_project_parser.add_argument('--budgetby', '-y', help = 'The project\'s budget method.', choices = Project.BUDGET_BY_TYPE)
+create_project_parser.set_defaults(func = create_project)
+
+# Delete Project
+delete_project_parser = subparsers.add_parser(
+    'delete-project',
+    help = 'Deletes a project.'
+)
+delete_project_parser.add_argument('projectid', help = 'The project\'s ID.', type = int)
+delete_project_parser.set_defaults(func = delete_project)
 
 
 # The Parsening: Part Deux: The Reckoning.
