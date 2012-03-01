@@ -51,14 +51,14 @@ class Harvest(ReapBase):
         if response:
             return Person(self, response['user'])
 
-    def create_project(self, name, client_id, bill_by = 'none', budget = None, budget_by = 'none', notes = None):
+    def create_project(self, name, client_id, budget = None, budget_by = 'none', notes = None, billable = True):
         project = {'project':{
             'name': name,
             'client_id': client_id,
-            'bill_by': bill_by,
             'budget_by': budget_by,
             'budget': budget,
             'notes': notes,
+            'billable': billable,
         }}
         response = self.post_request('projects/', project, follow = True)
         if response:
@@ -107,8 +107,6 @@ class Projects:
         return len(self.project_list)
 
 class Project:
-    BILL_BY_TYPE = ['Tasks', 'People', 'none']
-
     BUDGET_BY_TYPE = ['project', 'project_cost', 'task', 'person', 'none']
 
     def __init__(self, hv, json):

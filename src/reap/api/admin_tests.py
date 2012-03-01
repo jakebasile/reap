@@ -130,26 +130,26 @@ class TestProjects(HarvestTest):
 
     def test_create(self):
         name = random_string()
-        bill_by = random.choice(Project.BILL_BY_TYPE)
         budget_by = random.choice(Project.BUDGET_BY_TYPE)
         client_id = random.choice(self.hv.clients()).id
         notes = random_string()
         budget = round(random.random() * 100, 2)
+        billable = bool(random.getrandbits(1))
         project = self.hv.create_project(
             name,
             client_id,
-            bill_by = bill_by,
             budget = budget,
             budget_by = budget_by,
             notes = notes,
+            billable = billable,
         )
         self.assertIsNotNone(project)
         self.assertEqual(project.name, name)
         self.assertEqual(project.client_id, client_id)
-        self.assertEqual(project.bill_by, bill_by)
         self.assertEqual(project.budget, budget)
         self.assertEqual(project.budget_by, budget_by)
         self.assertEqual(project.notes, notes)
+        self.assertEqual(project.billable, billable)
         # clean up
         project.delete()
 

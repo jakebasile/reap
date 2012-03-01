@@ -137,3 +137,26 @@ def list_projects(args):
             for inact in inactive:
                 print str.format(PROJECT_FORMAT, project = inact)
 
+def create_project(args):
+    hv = get_harvest()
+    if hv:
+        project = hv.create_project(
+            args.name,
+            args.clientid,
+            budget = args.budget if hasattr(args, 'budget') else None,
+            notes = args.notes if hasattr(args, 'notes') else None,
+            budget_by = args.budgetby if hasattr(args, 'budgetby') else 'none',
+            bill_by = args.billby if hasattr(args, 'billby') else 'none',
+        )
+        if project:
+            print '# Created Person:'
+            print str.format(PROJECT_FORMAT, project = project)
+
+def delete_project(args):
+    hv = get_harvest()
+    if hv:
+        for project in hv.projects():
+            if project.id == args.projectid:
+                project.delete()
+                print 'Project Deleted.'
+                break
