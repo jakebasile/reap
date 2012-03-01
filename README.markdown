@@ -82,7 +82,20 @@ For now, you need to specify the entry ID with all of these operations, the old 
 
 ## Administration
 
-**Reap** now includes the beginnings of a basic administrative interface, under the `reap-admin` command. At the moment, it supports creating, listing, and deleting users. For example, the following command creates a new administrative user named "Mean Guy" in the department of Firings, with the email meanguy@example.com and the hourly rate of $150.00:
+**Reap** now includes the beginnings of a basic administrative interface, under the `reap-admin` command. It currently supports the following operations:
+
+* Projects
+    * List
+* People
+    * List
+    * Create
+    * Delete
+* Projects
+    * List
+* Clients
+    * List
+
+For example, the following command creates a new administrative user named "Mean Guy" in the department of Firings, with the email meanguy@example.com and the hourly rate of $150.00:
 
     $ reap-admin create-person -a -d 'Firings Department' -r 150.00 Mean Guy meanguy@example.com
     # Created person:
@@ -112,6 +125,17 @@ In the future, I plan to:
 * Add more error checking and more useful error messages.
 
 ## Changelog
+
+### v0.4
+
+* Added reap-admin script for administrative functions.
+* Added create-people to reap-admin.
+* Added list-people to reap-admin.
+* Added delete-person to reap-admin.
+* Added list-clients to reap-admin.
+* Added list-projects to reap-admin.
+* Added API support for projects, clients, and people.
+* Changed API to not require querying before creating an object.
 
 ### v0.3
 
