@@ -42,7 +42,7 @@ create_person_parser.add_argument('email', help = 'The person\'s email address.'
 create_person_parser.add_argument('--admin', '-a', help = 'Makes the person an admin.', action = 'store_true')
 create_person_parser.add_argument('--contractor', '-c', help = 'Makes the person a contractor.', action = 'store_true')
 create_person_parser.add_argument('--department', '-d', help = 'Sets this person\'s department.')
-create_person_parser.add_argument('--rate', '-r', help = 'Sets this person\'s default rate.')
+create_person_parser.add_argument('--rate', '-r', help = 'Sets this person\'s default rate.', type = float)
 create_person_parser.set_defaults(func = create_person)
 
 # Delete Person
@@ -50,7 +50,7 @@ delete_person_parser = subparsers.add_parser(
     'delete-person',
     help = 'Deletes a person. There is no undo.'
 )
-delete_person_parser.add_argument('personid', help = 'The person\'s ID.')
+delete_person_parser.add_argument('personid', help = 'The person\'s ID.', type = int)
 delete_person_parser.set_defaults(func = delete_person)
 
 # List Clients
@@ -72,7 +72,7 @@ create_project_parser = subparsers.add_parser(
     'create-project',
     help = 'Creates a project for the given client.'
 )
-create_project_parser.add_argument('clientid', help = 'The Client ID to create the project under.')
+create_project_parser.add_argument('clientid', help = 'The Client ID to create the project under.', type = int)
 create_project_parser.add_argument('name', help = 'The name of the project.')
 create_project_parser.add_argument('--note', '-n', help = 'Notes on the project.')
 create_project_parser.add_argument('--budget', '-b', help = 'The project\'s budget.', type = float)
