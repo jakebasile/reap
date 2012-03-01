@@ -39,28 +39,12 @@ status_parser = subparsers.add_parser(
 )
 status_parser.set_defaults(func = status)
 
-# Bookmark
-# bookmark_parser = subparsers.add_parser(
-#     'bookmark',
-#     help = 'Bookmark an entry so that it can be referred to more easily.',
-# )
-# bookmark_parser.add_argument('entryid', help = 'The entry ID.')
-# bookmark_parser.add_argument('name', help = 'The bookmark name')
-# bookmark_parser.set_defaults(func = bookmark)
-
-# Bookmarks
-# bookmarks_parser = subparsers.add_parser(
-#     'bookmarks',
-#     help = 'Displays all bookmarks',
-# )
-# bookmarks_parser.set_defaults(func = bookmarks)
-
 # Start
 start_parser = subparsers.add_parser(
     'start',
     help = 'Starts a timer. Will stop other timers automatically.',
 )
-start_parser.add_argument('entryid', help = 'The entry ID or bookmark to start the timer on.')
+start_parser.add_argument('entryid', help = 'The entry ID or bookmark to start the timer on.', type = int)
 start_parser.set_defaults(func = start)
 
 # Stop
@@ -82,8 +66,8 @@ create_parser = subparsers.add_parser(
     'create',
     help = 'Creates a new entry.',
 )
-create_parser.add_argument('projectid', help = 'The project ID')
-create_parser.add_argument('taskid', help = 'The task ID')
+create_parser.add_argument('projectid', help = 'The project ID', type = int)
+create_parser.add_argument('taskid', help = 'The task ID', type = int)
 create_parser.add_argument('--time', '-t', help = 'Previously accrued time to add to the entry, in HH:MM format.')
 create_parser.add_argument('--notes', '-n', help = 'Notes to set on the new entry.')
 create_parser.set_defaults(func = create)
@@ -93,7 +77,7 @@ delete_parser = subparsers.add_parser(
     'delete',
     help = 'Deletes an entry.'
 )
-delete_parser.add_argument('entryid', help = 'The entry ID or bookmark to delete.')
+delete_parser.add_argument('entryid', help = 'The entry ID to delete.', type = int)
 delete_parser.set_defaults(func = delete)
 
 # Update
@@ -101,11 +85,11 @@ update_parser = subparsers.add_parser(
     'update',
     help = 'Updates an entry.'
 )
-update_parser.add_argument('entryid', help = 'The entry ID or bookmark to delete.')
+update_parser.add_argument('entryid', help = 'The entry ID to delete.', type = int)
 update_parser.add_argument('--append', '-a', help = 'Causes note and time values to be added to current values instead of overwriting them.', action = 'store_true')
 update_parser.add_argument('--notes', '-n', help = 'The notes to set on the entry. Will overwrite current note unless passed with append argument.')
 update_parser.add_argument('--time', '-t', help = 'The accrued time to set on the entry. Will overwrite current time unless passed with append argument. In HH:MM format.')
-update_parser.add_argument('--task', '-k', help = 'The project and task ID to set on the entry.', nargs = 2, metavar = ('PROJECTID', 'TASKID'))
+update_parser.add_argument('--task', '-k', help = 'The project and task ID to set on the entry.', nargs = 2, metavar = ('PROJECTID', 'TASKID'), type = int)
 update_parser.set_defaults(func = update)
 
 
