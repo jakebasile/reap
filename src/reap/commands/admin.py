@@ -16,6 +16,7 @@ import keyring
 import getpass
 import urllib2
 import reap.api.admin
+import datetime
 from reap.commands.support import *
 
 PERSON_FORMAT = '''Name:           {person.first_name} {person.last_name}
@@ -39,6 +40,14 @@ Bill-By:    {project.bill_by}
 Rate:       {project.hourly_rate}
 Budget:     {project.budget}
 Notes:      {project.notes}
+'''
+
+HOURS_REPORT_FORMAT = '''Name:           {person.first_name} {person.last_name}
+ID:             {person.id}
+Total Hours:    {total}
+Billable:       {billable}
+Non-billable:   {unbillable}
+Ratio:          {ratio}
 '''
 
 def get_harvest():
@@ -160,3 +169,59 @@ def delete_project(args):
                 project.delete()
                 print 'Project Deleted.'
                 break
+
+def hours_report(args):
+    hv = get_harvest()
+    if hv:
+        id = int(args.personid)
+        for p in hv.people():
+            if p.id == id:
+                person = p
+                break
+        if person:
+            if args.start:
+                start = datetime.datetime.strptime(args.start, '%Y%m%d')
+            else:
+                start = datetime.datetime.today()
+            if args.end:
+                end = datetime.datetime.strptime(args.end, '%Y%m%d')
+            else:
+                end = datetime.datetime.today()
+            entries = person.entries(start = start, end = end)
+            if entries:
+                map = {p: [] for p in hv.projects()}
+                for entry in entries:
+                    for proj in map.keys():
+                        if proj.id == entry.project_id:
+                            map[proj] += [entry]
+                            break;
+                total = 0.0
+                billable = 0.0
+                unbillable = 0.0
+                for proj in map.keys():
+                    proj_total = 0.0
+                    for entry in map[proj]:
+                        proj_total += entry.hours
+                    if proj.billable:
+                        billable += proj_total
+                    else:
+                        unbillable += proj_total
+                    total += proj_total
+                ratio = billable / unbillable if unbillable > 0.0 else 'Undef.'
+                print str.format(
+                    '# Hours Report for {} - {}',
+                    start.strftime('%Y%m%d'),
+                    end.strftime('%Y%m%d'),
+                )
+                print str.format(
+                    HOURS_REPORT_FORMAT,
+                    total = total,
+                    billable = billable,
+                    unbillable = unbillable,
+                    ratio = ratio,
+                    person = person,
+                )
+            else:
+                print 'No entries for that time period.'
+        else:
+            print 'No such person ID.'
