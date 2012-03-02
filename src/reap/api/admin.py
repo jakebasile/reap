@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import datetime
 from reap.api.base import ReapBase, parse_time, parse_short_time
 
 class Harvest(ReapBase):
@@ -24,6 +25,7 @@ class Harvest(ReapBase):
             raise ValueError('Unable to login with given info.')
         if not login_response['user']['admin']:
             raise ValueError('User is not an admin')
+        self.id = login_response['user']['id']
 
     def people(self):
         people_response = self.get_request('people/')
@@ -94,6 +96,31 @@ class Person:
     def delete(self):
         response = self.hv.delete_request('people/' + str(self.id))
         return response
+
+    def entries(self, start = datetime.datetime.today(), end = datetime.datetime.today()):
+        fr = start.strftime('%Y%m%d')
+        to = end.strftime('%Y%m%d')
+        url = str.format(
+            'people/{}/entries?from={}&to={}',
+            str(self.id),
+            fr,
+            to,
+        )
+        response = self.hv.get_request(url)
+        return [Entry(self.hv, ej['day_entry']) for ej in response]
+
+class Entry:
+    def __init__(self, hv, json):
+        self.id = json['id']
+        self.hours = float(json['hours'])
+        self.project_id = json['project_id']
+        self.notes = json['notes']
+        self.task_id = json['task_id']
+        self.user_id = json['user_id']
+        self.billed = json['is_billed']
+        self.closed = json['is_closed']
+        self.updated = parse_time(json['updated_at'])
+        self.created = parse_time(json['created_at'])
 
 class Projects:
     def __init__(self, hv, json):

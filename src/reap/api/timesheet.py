@@ -22,6 +22,7 @@ class Timesheet(ReapBase):
         login_response = self.get_request('account/who_am_i')
         if not login_response:
             raise ValueError('Unable to login with given info.')
+        self.id = login_response['user']['id']
 
     def projects(self):
         projects_response = self.get_request('daily')
