@@ -124,7 +124,8 @@ For more information, run `reap-admin -h`.
     Total Hours:    11.0
     Billable:       6.0
     Non-billable:   5.0
-    Ratio:          1.2
+    Ratio B/NB:     1.2
+    % Billable:     54.55%
     ... and so on ...
 
 ## More Help

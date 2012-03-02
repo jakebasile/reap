@@ -47,7 +47,8 @@ ID:             {person.id}
 Total Hours:    {total}
 Billable:       {billable}
 Non-billable:   {unbillable}
-Ratio:          {ratio}
+Ratio B/NB:     {ratio}
+% Billable:     {percent:.2%}
 '''
 
 def get_harvest():
@@ -220,6 +221,7 @@ def hours_report(args):
                             unbillable += proj_total
                         total += proj_total
                     ratio = billable / unbillable if unbillable > 0.0 else 'Undef.'
+                    percent = billable / total if total > 0.0 else 'Undef.'
                     print str.format(
                         HOURS_REPORT_FORMAT,
                         total = total,
@@ -227,6 +229,7 @@ def hours_report(args):
                         unbillable = unbillable,
                         ratio = ratio,
                         person = person,
+                        percent = percent,
                     )
             else:
                 print 'No entries for that time period.'
