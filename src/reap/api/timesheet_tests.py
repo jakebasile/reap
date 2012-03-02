@@ -34,6 +34,7 @@ class TestTimesheetLogin(TimesheetTest):
     def runTest(self):
         ts = Timesheet(self.base_uri, self.username, self.password)
         self.assertIsNotNone(ts)
+        self.assertIsNotNone(ts.id)
         self.assertRaises(ValueError, Timesheet, random_string(), random_string(), random_string())
 
 class TestProjectTask(TimesheetTest):

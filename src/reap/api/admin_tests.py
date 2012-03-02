@@ -17,6 +17,7 @@ import random
 import string
 import datetime
 from reap.api.admin import *
+from reap.api.timesheet import Timesheet
 
 def random_string(length = 5):
     return ''.join(random.choice(string.ascii_lowercase) for x in xrange(length))
@@ -34,6 +35,7 @@ class TestHarvestLogin(HarvestTest):
     def runTest(self):
         hv = Harvest(self.base_uri, self.username, self.password)
         self.assertIsNotNone(hv)
+        self.assertIsNotNone(hv.id)
         self.assertRaises(ValueError, Harvest, random_string(), random_string(), random_string())
 
 class TestPeople(HarvestTest):
@@ -106,6 +108,57 @@ class TestPeople(HarvestTest):
         for p in self.hv.people():
             if p.id == id:
                 self.fail()
+
+    def test_entries(self):
+        # need to get a timesheet for the current user.
+        ts = Timesheet(self.base_uri, self.username, self.password)
+        # create some entries.
+        projects = ts.projects()
+        self.assertTrue(len(projects) > 0)
+        entries = []
+        for i in xrange(random.randint(0, 5)):
+            project = random.choice(projects)
+            task = random.choice(project.tasks())
+            entry = ts.create_entry(project.id, task.id, hours = random.random() * 10)
+            entry.stop()
+            entries += [entry]
+        # Get the entries from the admin interface.
+        person = None
+        for p in self.hv.people():
+            if p.id == ts.id:
+                person = p
+        self.assertIsNotNone(person)
+        report_entries = person.entries(
+            start = datetime.datetime.today(),
+            end = datetime.datetime.today(),
+        )
+        # ensure the data is there.
+        for rentry in report_entries:
+            self.assertIsNotNone(rentry.hours)
+            self.assertIsNotNone(rentry.id)
+            self.assertIsNotNone(rentry.notes)
+            self.assertIsNotNone(rentry.project_id)
+            self.assertIsNotNone(rentry.task_id)
+            self.assertIsNotNone(rentry.user_id)
+            self.assertIsNotNone(rentry.billed)
+            self.assertIsNotNone(rentry.closed)
+            self.assertIsNotNone(rentry.updated)
+            self.assertIsNotNone(rentry.created)
+        # ensure the data matches up.
+        self.assertEqual(len(report_entries), len(entries))
+        matches = 0
+        for rentry in report_entries:
+            for oentry in entries:
+                if oentry.id == rentry.id:
+                    matches += 1
+                    self.assertEqual(oentry.hours, rentry.hours)
+                    self.assertEqual(oentry.project_id, rentry.project_id)
+                    self.assertEqual(oentry.task_id, rentry.task_id)
+                    break
+        # Clean up
+        for entry in entries:
+            entry.delete()
+
 
 class TestProjects(HarvestTest):
     def test_get(self):
