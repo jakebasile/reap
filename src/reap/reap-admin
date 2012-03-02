@@ -92,7 +92,7 @@ hours_report_parser = subparsers.add_parser(
     'hours-report',
     help = 'Generates a report on a particular user\'s hours.'
 )
-hours_report_parser.add_argument('personids', help = 'The IDs of the people on which to generate the report.', nargs = '+')
+hours_report_parser.add_argument('personids', help = 'The IDs of the people on which to generate the report.', nargs = '+', type = int)
 hours_report_parser.add_argument('--start', '-s', help = 'When to start the report. Defaults to today. YYYYMMDD format.')
 hours_report_parser.add_argument('--end', '-e', help = 'When to end the report. Defaults to today. YYYYMMDD')
 hours_report_parser.set_defaults(func = hours_report)

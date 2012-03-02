@@ -113,6 +113,20 @@ You can similarly delete users with the `delete-person` command:
 
 For more information, run `reap-admin -h`.
 
+## Reporting
+
+**Reap** also includes some basic reporting functionality, under the `reap-admin` command. There is currently one report, `hours-report`. It shows the total, billable, and non-billable hour count for any number of people over a given time period. To generate this report over the course of a week, you would issue this command:
+
+    $ reap-admin hours-report -s 20120227 -e 20120302 315700 315701 315702...
+    # Hours Report for 20120227 - 20120302
+    Name:           Mean Guy
+    ID:             315700
+    Total Hours:    11.0
+    Billable:       6.0
+    Non-billable:   5.0
+    Ratio:          1.2
+    ... and so on ...
+
 ## More Help
 
 If you can't figure something out, or you think **Reap** is broken, send me an [email](http://www.google.com/recaptcha/mailhide/d?k=01Setbc2JX7fNIQvHb-xyRqA==&c=J27oPGH6BTxbJKfL2FXzDSIGtNL1BzvC4Xt4Jomxcss=).
@@ -128,13 +142,15 @@ In the future, I plan to:
 
 ### v0.4
 
+* Added input checking to IDs.
 * Added reap-admin script for administrative functions.
 * Added create-people to reap-admin.
 * Added list-people to reap-admin.
 * Added delete-person to reap-admin.
 * Added list-clients to reap-admin.
 * Added list-projects to reap-admin.
-* Added API support for projects, clients, and people.
+* Added hours-report to reap-admin.
+* Added API support for projects, clients, people, and people's entries.
 * Changed API to not require querying before creating an object.
 
 ### v0.3
