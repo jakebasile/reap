@@ -84,14 +84,14 @@ For now, you need to specify the entry ID with all of these operations, the old 
 
 **Reap** now includes the beginnings of a basic administrative interface, under the `reap-admin` command. It currently supports the following operations:
 
-* Projects
-    * List
 * People
     * List
     * Create
     * Delete
 * Projects
     * List
+    * Create
+    * Delete
 * Clients
     * List
 
@@ -138,6 +138,7 @@ In the future, I plan to:
 
 * Make working with entries easier.
 * Add more error checking and more useful error messages.
+* Add more administrative functions.
 
 ## Changelog
 
