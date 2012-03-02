@@ -173,12 +173,14 @@ def delete_project(args):
 def hours_report(args):
     hv = get_harvest()
     if hv:
-        id = int(args.personid)
-        for p in hv.people():
-            if p.id == id:
-                person = p
-                break
-        if person:
+        people = []
+        for pid in set(args.personids):
+            id = int(pid)
+            for p in hv.people():
+                if p.id == id:
+                    people += [p]
+                    break
+        if len(people) > 0:
             if args.start:
                 start = datetime.datetime.strptime(args.start, '%Y%m%d')
             else:
@@ -187,40 +189,45 @@ def hours_report(args):
                 end = datetime.datetime.strptime(args.end, '%Y%m%d')
             else:
                 end = datetime.datetime.today()
-            entries = person.entries(start = start, end = end)
-            if entries:
-                map = {p: [] for p in hv.projects()}
-                for entry in entries:
-                    for proj in map.keys():
-                        if proj.id == entry.project_id:
-                            map[proj] += [entry]
-                            break;
-                total = 0.0
-                billable = 0.0
-                unbillable = 0.0
-                for proj in map.keys():
-                    proj_total = 0.0
-                    for entry in map[proj]:
-                        proj_total += entry.hours
-                    if proj.billable:
-                        billable += proj_total
-                    else:
-                        unbillable += proj_total
-                    total += proj_total
-                ratio = billable / unbillable if unbillable > 0.0 else 'Undef.'
+            entries_collection = [
+                (person, person.entries(start = start, end = end))
+                for person in people
+            ]
+            if len(entries_collection) > 0:
                 print str.format(
                     '# Hours Report for {} - {}',
                     start.strftime('%Y%m%d'),
                     end.strftime('%Y%m%d'),
                 )
-                print str.format(
-                    HOURS_REPORT_FORMAT,
-                    total = total,
-                    billable = billable,
-                    unbillable = unbillable,
-                    ratio = ratio,
-                    person = person,
-                )
+                projects = hv.projects()
+                for person, entries in entries_collection:
+                    map = {p: [] for p in projects}
+                    for entry in entries:
+                        for proj in map.keys():
+                            if proj.id == entry.project_id:
+                                map[proj] += [entry]
+                                break;
+                    total = 0.0
+                    billable = 0.0
+                    unbillable = 0.0
+                    for proj in map.keys():
+                        proj_total = 0.0
+                        for entry in map[proj]:
+                            proj_total += entry.hours
+                        if proj.billable:
+                            billable += proj_total
+                        else:
+                            unbillable += proj_total
+                        total += proj_total
+                    ratio = billable / unbillable if unbillable > 0.0 else 'Undef.'
+                    print str.format(
+                        HOURS_REPORT_FORMAT,
+                        total = total,
+                        billable = billable,
+                        unbillable = unbillable,
+                        ratio = ratio,
+                        person = person,
+                    )
             else:
                 print 'No entries for that time period.'
         else:
