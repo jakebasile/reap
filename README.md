@@ -126,7 +126,7 @@ For more information, run `reap-admin -h`.
 
 ## Reporting
 
-**Reap** also includes some basic reporting functionality, under the `reap-admin` command. There is currently one report, `hours-report`. It shows the total, billable, and non-billable hour count for any number of people over a given time period. To generate this report over the course of a week, you would issue this command:
+**Reap** also includes some basic reporting functionality, under the `reap-admin` command. An example is the `hours-report`: it shows the total, billable, and non-billable hour count for any number of people over a given time period. To generate this report over the course of a week, you would issue this command:
 
     :::bash
     $ reap-admin hours-report -s 20120227 -e 20120302 315700 315701 315702...
@@ -138,6 +138,20 @@ For more information, run `reap-admin -h`.
     Non-billable:   5.0
     Ratio B/NB:     1.2
     % Billable:     54.55%
+    ... and so on ...
+
+There is also a `person-projects-report` that lists the projects a person has worked on over a given time period along with the hours logged to that project. A short example:
+
+    :::bash
+    $ reap-admin person-projects-report 315700 315701 315702...
+    # Projects Report for 20120305 - 20120305
+    Name:           Mean Guy
+    Projects:
+        Name:       Test Project 2
+        Hours:      3.0
+    
+        Name:       Test Project 1
+        Hours:      11.0
     ... and so on ...
 
 ## API
@@ -182,6 +196,7 @@ In the future, I plan to:
 * Added list-clients to reap-admin.
 * Added list-projects to reap-admin.
 * Added hours-report to reap-admin.
+* Added person-projects-report to reap-admin.
 * Added API support for projects, clients, people, and people's entries.
 * Changed API to not require querying before creating an object.
 
