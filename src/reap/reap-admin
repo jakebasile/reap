@@ -97,6 +97,16 @@ hours_report_parser.add_argument('--start', '-s', help = 'When to start the repo
 hours_report_parser.add_argument('--end', '-e', help = 'When to end the report. Defaults to today. YYYYMMDD')
 hours_report_parser.set_defaults(func = hours_report)
 
+# Projects Report
+person_projects_report_parser = subparsers.add_parser(
+    'person-projects-report',
+    help = 'Generates a report on a particular user\'s projects.'
+)
+person_projects_report_parser.add_argument('personids', help = 'The IDs of the people on which to generate the report.', nargs = '+', type = int)
+person_projects_report_parser.add_argument('--start', '-s', help = 'When to start the report. Defaults to today. YYYYMMDD format.')
+person_projects_report_parser.add_argument('--end', '-e', help = 'When to end the report. Defaults to today. YYYYMMDD')
+person_projects_report_parser.set_defaults(func = person_projects_report)
+
 
 # The Parsening: Part Deux: The Reckoning.
 args = parser.parse_args()
