@@ -27,6 +27,7 @@ setup(
     scripts = [
         'src/reap/reap',
         'src/reap/reap-admin',
+        'src/reap/reap-reports',
     ],
     install_requires = ['keyring'],
     classifiers = [

@@ -1,0 +1,49 @@
+#!/usr/bin/python
+
+# Copyright 2012 Jake Basile
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+import argparse
+from reap.commands.reports import *
+
+# Parser Declarations
+parser = argparse.ArgumentParser(
+    description = 'A command line report generator for the Harvest time tracking system.'
+)
+subparsers = parser.add_subparsers()
+
+# Hours Report
+hours_parser = subparsers.add_parser(
+    'hours',
+    help = 'Generates a report on a particular user\'s hours.'
+)
+hours_parser.add_argument('personids', help = 'The IDs of the people on which to generate the report.', nargs = '+', type = int)
+hours_parser.add_argument('--start', '-s', help = 'When to start the report. Defaults to today. YYYYMMDD format.')
+hours_parser.add_argument('--end', '-e', help = 'When to end the report. Defaults to today. YYYYMMDD')
+hours_parser.set_defaults(func = hours)
+
+# Projects Report
+projects_parser = subparsers.add_parser(
+    'projects',
+    help = 'Generates a report on a particular user\'s projects.'
+)
+projects_parser.add_argument('personids', help = 'The IDs of the people on which to generate the report.', nargs = '+', type = int)
+projects_parser.add_argument('--start', '-s', help = 'When to start the report. Defaults to today. YYYYMMDD format.')
+projects_parser.add_argument('--end', '-e', help = 'When to end the report. Defaults to today. YYYYMMDD')
+projects_parser.set_defaults(func = person_projects)
+
+
+# The Parsening: The Third: This Time It's Personal
+args = parser.parse_args()
+args.func(args)
