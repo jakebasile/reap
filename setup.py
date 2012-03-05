@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(
     name = 'reap',
@@ -23,7 +23,10 @@ setup(
     url = 'http://code.jakebasile.com/reap/',
     download_url='http://code.jakebasile.com/reap/downloads/reap-0.4.tar.gz',
     package_dir = {'': 'src'},
-    packages = ['reap'],
+    packages = find_packages('src'),
+    package_data = {
+        '': ['README.md','LICENSE.txt','NOTICE.txt',]
+    },
     scripts = [
         'src/reap/reap',
         'src/reap/reap-admin',
