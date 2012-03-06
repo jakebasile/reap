@@ -43,6 +43,16 @@ projects_parser.add_argument('--start', '-s', help = 'When to start the report. 
 projects_parser.add_argument('--end', '-e', help = 'When to end the report. Defaults to today. YYYYMMDD')
 projects_parser.set_defaults(func = projects)
 
+# Tasks Report
+tasks_parser = subparsers.add_parser(
+    'tasks',
+    help = 'Generates a report on a particular user\'s tasks.'
+)
+tasks_parser.add_argument('personids', help = 'The IDs of the people on which to generate the report.', nargs = '+', type = int)
+tasks_parser.add_argument('--start', '-s', help = 'When to start the report. Defaults to today. YYYYMMDD format.')
+tasks_parser.add_argument('--end', '-e', help = 'When to end the report. Defaults to today. YYYYMMDD')
+tasks_parser.set_defaults(func = tasks)
+
 
 # The Parsening: The Third: This Time It's Personal
 args = parser.parse_args()

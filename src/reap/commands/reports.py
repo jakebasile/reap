@@ -36,6 +36,14 @@ PERSON_PROJECTS_REPORT_BODY_FORMAT = '''    Name:       {name}
     Hours:      {hours}
 '''
 
+TASKS_HEADER_FORMAT = \
+'''Name:   {person.first_name} {person.last_name}
+Tasks:'''
+
+TASKS_BODY_FORMAT = '''        Task:   {name}
+        Hours:  {hours}
+'''
+
 def get_harvest():
     info = load_info()
     if info:
@@ -149,6 +157,39 @@ def projects(args):
                         PERSON_PROJECTS_REPORT_BODY_FORMAT,
                         name = project.name,
                         hours = person_projects[project]
+                    )
+        else:
+            print 'No such person ID(s).'
+
+def tasks(args):
+    hv = get_harvest()
+    if hv:
+        people = get_people(hv, args.personids)
+        if len(people) > 0:
+            times = parse_time_inputs(args.start, args.end)
+            start = times[0]
+            end = times[1]
+            tasks = hv.tasks()
+            tasks_by_id = {task.id: task for task in tasks}
+            print str.format(
+                '# Tasks Report for {} - {}',
+                start.strftime('%Y%m%d'),
+                end.strftime('%Y%m%d'),
+            )
+            for person in people:
+                print str.format(TASKS_HEADER_FORMAT, person = person)
+                person_tasks = {}
+                for entry in person.entries(start = start, end = end):
+                    task = tasks_by_id[entry.task_id]
+                    if person_tasks.has_key(task):
+                        person_tasks[task] += entry.hours
+                    else:
+                        person_tasks[task] = entry.hours
+                for task in person_tasks.keys():
+                    print str.format(
+                        TASKS_BODY_FORMAT,
+                        name = task.name,
+                        hours = person_tasks[task]
                     )
         else:
             print 'No such person ID(s).'
