@@ -195,9 +195,10 @@ In the future, I plan to:
 * Added delete-person to reap-admin.
 * Added list-clients to reap-admin.
 * Added list-projects to reap-admin.
-* Added hours-report to reap-admin.
-* Added person-projects-report to reap-admin.
-* Added API support for projects, clients, people, and people's entries.
+* Added hours report to reap-reports.
+* Added projects report to reap-reports.
+* Added tasks report to reap-reports
+* Added API support for projects, clients, people, tasks, and people's entries.
 * Changed API to not require querying before creating an object.
 
 ### v0.3
