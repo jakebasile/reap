@@ -31,7 +31,7 @@ class Timesheet(ReapBase):
 
     def entries(self):
         entries_response = self.get_request('daily')
-        entries = Entries(self, entries_response['day_entries'])
+        entries = [Entry(self, ejson) for ejson in entries_response['day_entries']]
         return entries
 
     def create_entry(self, project_id, task_id, hours = 0, notes = ''):
@@ -62,17 +62,6 @@ class Task:
         self.id = json['id']
         self.billable = json['billable']
         self.project = project
-
-class Entries:
-    def __init__(self, ts, json):
-        self.ts = ts
-        self.entry_list = [Entry(ts, ejson) for ejson in json]
-
-    def __iter__(self):
-        return iter(self.entry_list)
-
-    def __len__(self):
-        return len(self.entry_list)
 
 class Entry:
     def __init__(self, ts, json):
