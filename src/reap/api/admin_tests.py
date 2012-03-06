@@ -242,6 +242,20 @@ class TestClients(HarvestTest):
                 self.assertIsNotNone(client.invoice_timeframe[1])
             self.assertTrue(hasattr(client, 'last_invoice_kind'))
 
+class TestTasks(HarvestTest):
+    def test_get(self):
+        tasks = self.hv.tasks()
+        self.assertIsNotNone(tasks)
+        for task in tasks:
+            self.assertIsNotNone(task.default_billable)
+            self.assertIsNotNone(task.deactivated)
+            self.assertTrue(hasattr(task, 'default_hourly_rate'))
+            self.assertIsNotNone(task.id)
+            self.assertIsNotNone(task.default)
+            self.assertIsNotNone(task.name)
+            self.assertIsNotNone(task.updated)
+            self.assertIsNotNone(task.created)
+
 
 if __name__ == '__main__':
     unittest.main()
