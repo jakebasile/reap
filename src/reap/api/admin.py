@@ -35,6 +35,10 @@ class Harvest(ReapBase):
         projects_response = self.get_request('projects/')
         return Projects(self, projects_response)
 
+    def tasks(self):
+        tasks_response = self.get_request('tasks/')
+        return [Task(self, tjson['task']) for tjson in tasks_response]
+
     def clients(self):
         clients_response = self.get_request('clients/')
         return Clients(self, clients_response)
@@ -194,3 +198,14 @@ class Client:
         else:
             self.invoice_timeframe = None
         self.last_invoice_kind = json['last_invoice_kind']
+
+class Task:
+    def __init__(self, hv, json):
+        self.default_billable = json['billable_by_default']
+        self.deactivated = json['deactivated']
+        self.default_hourly_rate = json['default_hourly_rate']
+        self.id = json['id']
+        self.name = json['name']
+        self.default = json['is_default']
+        self.updated = parse_time(json['updated_at'])
+        self.created = parse_time(json['created_at'])
