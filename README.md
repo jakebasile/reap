@@ -140,7 +140,7 @@ For more information, run `reap-admin -h`.
     % Billable:     54.55%
     ... and so on ...
 
-There is also a `projects` report that lists the projects a person has worked on over a given time period along with the hours logged to that project. A short example:
+There is also a `projects` report that lists the projects a person has worked on over a given time period along with the hours logged to that project and a `tasks` report that lists the tasks a user has worked on across projects over a given time period. A short example of the `projects` report:
 
     :::bash
     $ reap-admin projects 315700 315701 315702...
