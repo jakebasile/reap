@@ -136,7 +136,7 @@ class TestPeople(HarvestTest):
         for rentry in report_entries:
             self.assertIsNotNone(rentry.hours)
             self.assertIsNotNone(rentry.id)
-            self.assertIsNotNone(rentry.notes)
+            self.assertTrue(hasattr(rentry, 'notes'))
             self.assertIsNotNone(rentry.project_id)
             self.assertIsNotNone(rentry.task_id)
             self.assertIsNotNone(rentry.user_id)
