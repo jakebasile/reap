@@ -42,23 +42,6 @@ Budget:     {project.budget}
 Notes:      {project.notes}
 '''
 
-HOURS_REPORT_FORMAT = '''Name:           {person.first_name} {person.last_name}
-ID:             {person.id}
-Total Hours:    {total}
-Billable:       {billable}
-Non-billable:   {unbillable}
-Ratio B/NB:     {ratio}
-% Billable:     {percent:.2%}
-'''
-
-PERSON_PROJECTS_REPORT_HEADING_FORMAT = \
-'''Name:           {person.first_name} {person.last_name}
-Projects:'''
-
-PERSON_PROJECTS_REPORT_BODY_FORMAT = '''    Name:       {name}
-    Hours:      {hours}
-'''
-
 def get_harvest():
     info = load_info()
     if info:
@@ -85,28 +68,6 @@ def list_people(args):
             print '# Contractors'
             for contractor in contractors:
                 print str.format(PERSON_FORMAT, person = contractor)
-
-def get_people(hv, ids):
-    people = []
-    all_people = hv.people()
-    for pid in set(ids):
-        id = int(pid)
-        for p in all_people:
-            if p.id == id:
-                people += [p]
-                break
-    return people
-
-def parse_time_inputs(startstr, endstr):
-    if startstr:
-        start = datetime.datetime.strptime(startstr, '%Y%m%d')
-    else:
-        start = datetime.datetime.today()
-    if endstr:
-        end = datetime.datetime.strptime(endstr, '%Y%m%d')
-    else:
-        end = datetime.datetime.today()
-    return (start, end)
 
 def create_person(args):
     hv = get_harvest()
@@ -200,89 +161,3 @@ def delete_project(args):
                 project.delete()
                 print 'Project Deleted.'
                 break
-
-def hours_report(args):
-    hv = get_harvest()
-    if hv:
-        people = get_people(hv, args.personids)
-        if len(people) > 0:
-            times = parse_time_inputs(args.start, args.end)
-            start = times[0]
-            end = times[1]
-            entries_collection = [
-                (person, person.entries(start = start, end = end))
-                for person in people
-            ]
-            if len(entries_collection) > 0:
-                print str.format(
-                    '# Hours Report for {} - {}',
-                    start.strftime('%Y%m%d'),
-                    end.strftime('%Y%m%d'),
-                )
-                projects = hv.projects()
-                for person, entries in entries_collection:
-                    map = {p: [] for p in projects}
-                    for entry in entries:
-                        for proj in map.keys():
-                            if proj.id == entry.project_id:
-                                map[proj] += [entry]
-                                break;
-                    total = 0.0
-                    billable = 0.0
-                    unbillable = 0.0
-                    for proj in map.keys():
-                        proj_total = 0.0
-                        for entry in map[proj]:
-                            proj_total += entry.hours
-                        if proj.billable:
-                            billable += proj_total
-                        else:
-                            unbillable += proj_total
-                        total += proj_total
-                    ratio = billable / unbillable if unbillable > 0.0 else 'Undef.'
-                    percent = billable / total if total > 0.0 else 'Undef.'
-                    print str.format(
-                        HOURS_REPORT_FORMAT,
-                        total = total,
-                        billable = billable,
-                        unbillable = unbillable,
-                        ratio = ratio,
-                        person = person,
-                        percent = percent,
-                    )
-            else:
-                print 'No entries for that time period.'
-        else:
-            print 'No such person ID.'
-
-def person_projects_report(args):
-    hv = get_harvest()
-    if hv:
-        people = get_people(hv, args.personids)
-        if len(people) > 0:
-            times = parse_time_inputs(args.start, args.end)
-            start = times[0]
-            end = times[1]
-            projects = hv.projects()
-            projects_by_id = {project.id: project for project in projects}
-            print str.format(
-                '# Projects Report for {} - {}',
-                start.strftime('%Y%m%d'),
-                end.strftime('%Y%m%d'),
-            )
-            for person in people:
-                print str.format(PERSON_PROJECTS_REPORT_HEADING_FORMAT, person = person)
-                person_projects = {}
-                for entry in person.entries(start = start, end = end):
-                    project = projects_by_id[entry.project_id]
-                    if person_projects.has_key(project):
-                        person_projects[project] += entry.hours
-                    else:
-                        person_projects[project] = entry.hours
-                for project in person_projects.keys():
-                    print str.format(
-                        PERSON_PROJECTS_REPORT_BODY_FORMAT,
-                        name = project.name,
-                        hours = person_projects[project]
-                    )
-
