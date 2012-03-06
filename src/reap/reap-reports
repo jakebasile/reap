@@ -41,7 +41,7 @@ projects_parser = subparsers.add_parser(
 projects_parser.add_argument('personids', help = 'The IDs of the people on which to generate the report.', nargs = '+', type = int)
 projects_parser.add_argument('--start', '-s', help = 'When to start the report. Defaults to today. YYYYMMDD format.')
 projects_parser.add_argument('--end', '-e', help = 'When to end the report. Defaults to today. YYYYMMDD')
-projects_parser.set_defaults(func = person_projects)
+projects_parser.set_defaults(func = projects)
 
 
 # The Parsening: The Third: This Time It's Personal

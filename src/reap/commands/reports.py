@@ -118,9 +118,9 @@ def hours(args):
             else:
                 print 'No entries for that time period.'
         else:
-            print 'No such person ID.'
+            print 'No such person ID(s).'
 
-def person_projects(args):
+def projects(args):
     hv = get_harvest()
     if hv:
         people = get_people(hv, args.personids)
@@ -150,3 +150,5 @@ def person_projects(args):
                         name = project.name,
                         hours = person_projects[project]
                     )
+        else:
+            print 'No such person ID(s).'
