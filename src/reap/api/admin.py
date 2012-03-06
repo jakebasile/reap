@@ -29,15 +29,19 @@ class Harvest(ReapBase):
 
     def people(self):
         people_response = self.get_request('people/')
-        return People(self, people_response)
+        return [Person(self, pjson['user']) for pjson in people_response]
 
     def projects(self):
         projects_response = self.get_request('projects/')
-        return Projects(self, projects_response)
+        return [Project(self, pjson['project']) for pjson in projects_response]
+
+    def tasks(self):
+        tasks_response = self.get_request('tasks/')
+        return [Task(self, tjson['task']) for tjson in tasks_response]
 
     def clients(self):
         clients_response = self.get_request('clients/')
-        return Clients(self, clients_response)
+        return [Client(self, cjson['client']) for cjson in clients_response]
 
     def create_person(self, first_name, last_name, email, department = None, default_rate = None, admin = False, contractor = False):
         person = {'user':{
@@ -65,17 +69,6 @@ class Harvest(ReapBase):
         response = self.post_request('projects/', project, follow = True)
         if response:
             return Project(self, response['project'])
-
-class People:
-    def __init__(self, hv, json):
-        self.hv = hv
-        self.people_list = [Person(hv, pjson['user']) for pjson in json]
-
-    def __iter__(self):
-        return iter(self.people_list)
-
-    def __len__(self):
-        return len(self.people_list)
 
 class Person:
     def __init__(self, hv, json):
@@ -122,17 +115,6 @@ class Entry:
         self.updated = parse_time(json['updated_at'])
         self.created = parse_time(json['created_at'])
 
-class Projects:
-    def __init__(self, hv, json):
-        self.hv = hv
-        self.project_list = [Project(hv, pjson['project']) for pjson in json]
-
-    def __iter__(self):
-        return iter(self.project_list)
-
-    def __len__(self):
-        return len(self.project_list)
-
 class Project:
     BUDGET_BY_TYPE = ['project', 'project_cost', 'task', 'person', 'none']
 
@@ -158,20 +140,6 @@ class Project:
         response = self.hv.delete_request('projects/' + str(self.id))
         return response
 
-class Clients:
-    def __init__(self, hv, json):
-        self.hv = hv
-        self.client_list = [Client(hv, cjson['client']) for cjson in json]
-
-    def __iter__(self):
-        return iter(self.client_list)
-
-    def __len__(self):
-        return len(self.client_list)
-
-    def __getitem__(self, index):
-        return self.client_list[index]
-
 class Client:
     def __init__(self, hv, json):
         self.hv = hv
@@ -194,3 +162,14 @@ class Client:
         else:
             self.invoice_timeframe = None
         self.last_invoice_kind = json['last_invoice_kind']
+
+class Task:
+    def __init__(self, hv, json):
+        self.default_billable = json['billable_by_default']
+        self.deactivated = json['deactivated']
+        self.default_hourly_rate = json['default_hourly_rate']
+        self.id = json['id']
+        self.name = json['name']
+        self.default = json['is_default']
+        self.updated = parse_time(json['updated_at'])
+        self.created = parse_time(json['created_at'])

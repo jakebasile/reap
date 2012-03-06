@@ -9,9 +9,9 @@ To install the latest released version of **Reap**, use Pip:
     :::bash
     $ sudo pip install reap
 
-## Usage
+## Timesheet
 
-The installation will add a new command to your system, `reap`. This will allow access to all of **Reap**'s functionality.
+The installation will add a new command to your system, `reap`. This will allow access to all of **Reap**'s personal timesheet functionality.
 
 ### Login
 
@@ -91,7 +91,7 @@ For now, you need to specify the entry ID with all of these operations, the old 
 
 ## Administration
 
-**Reap** now includes the beginnings of a basic administrative interface, under the `reap-admin` command. It currently supports the following operations:
+**Reap** includes a basic administrative interface, under the `reap-admin` command. It currently supports the following operations:
 
 * People
     * List
@@ -126,10 +126,10 @@ For more information, run `reap-admin -h`.
 
 ## Reporting
 
-**Reap** also includes some basic reporting functionality, under the `reap-admin` command. An example is the `hours-report`: it shows the total, billable, and non-billable hour count for any number of people over a given time period. To generate this report over the course of a week, you would issue this command:
+**Reap** also includes some basic reporting functionality, under the `reap-reports` command. An example is the `hours` report: it shows the total, billable, and non-billable hour count for any number of people over a given time period. To generate this report over the course of a week, you would issue this command:
 
     :::bash
-    $ reap-admin hours-report -s 20120227 -e 20120302 315700 315701 315702...
+    $ reap-reports hours -s 20120227 -e 20120302 315700 315701 315702...
     # Hours Report for 20120227 - 20120302
     Name:           Mean Guy
     ID:             315700
@@ -140,10 +140,10 @@ For more information, run `reap-admin -h`.
     % Billable:     54.55%
     ... and so on ...
 
-There is also a `person-projects-report` that lists the projects a person has worked on over a given time period along with the hours logged to that project. A short example:
+There is also a `projects` report that lists the projects a person has worked on over a given time period along with the hours logged to that project. A short example:
 
     :::bash
-    $ reap-admin person-projects-report 315700 315701 315702...
+    $ reap-admin projects 315700 315701 315702...
     # Projects Report for 20120305 - 20120305
     Name:           Mean Guy
     Projects:
@@ -195,9 +195,10 @@ In the future, I plan to:
 * Added delete-person to reap-admin.
 * Added list-clients to reap-admin.
 * Added list-projects to reap-admin.
-* Added hours-report to reap-admin.
-* Added person-projects-report to reap-admin.
-* Added API support for projects, clients, people, and people's entries.
+* Added hours report to reap-reports.
+* Added projects report to reap-reports.
+* Added tasks report to reap-reports
+* Added API support for projects, clients, people, tasks, and people's entries.
 * Changed API to not require querying before creating an object.
 
 ### v0.3
