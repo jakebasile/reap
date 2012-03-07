@@ -12,10 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+'''An API for administrative functions on a Harvest time tracking system.'''
+
 import datetime
 from reap.api.base import ReapBase, parse_time, parse_short_time
 
 class Harvest(ReapBase):
+    '''Base class for accessing Harvest admin functions.'''
     def __init__(self, base_uri, username, password):
         self.base_uri = base_uri
         self.username = username
@@ -28,22 +31,27 @@ class Harvest(ReapBase):
         self.id = login_response['user']['id']
 
     def people(self):
+        '''Lists all People on this account.'''
         people_response = self.get_request('people/')
         return [Person(self, pjson['user']) for pjson in people_response]
 
     def projects(self):
+        '''Lists all Projects on this account.'''
         projects_response = self.get_request('projects/')
         return [Project(self, pjson['project']) for pjson in projects_response]
 
     def tasks(self):
+        '''Lists all Tasks on this account.'''
         tasks_response = self.get_request('tasks/')
         return [Task(self, tjson['task']) for tjson in tasks_response]
 
     def clients(self):
+        '''Lists all Clients on this account.'''
         clients_response = self.get_request('clients/')
         return [Client(self, cjson['client']) for cjson in clients_response]
 
     def create_person(self, first_name, last_name, email, department = None, default_rate = None, admin = False, contractor = False):
+        '''Creates a Person with the given information on this account.'''
         person = {'user':{
             'first_name': first_name,
             'last_name': last_name,
@@ -58,6 +66,7 @@ class Harvest(ReapBase):
             return Person(self, response['user'])
 
     def create_project(self, name, client_id, budget = None, budget_by = 'none', notes = None, billable = True):
+        '''Creates a Project with the given information on this account.'''
         project = {'project':{
             'name': name,
             'client_id': client_id,
