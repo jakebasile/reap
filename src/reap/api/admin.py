@@ -140,6 +140,7 @@ class Project:
         self.notes = json['notes']
         self.budget_by = json['budget_by']
         self.budget = float(json['budget']) if json['budget'] else None
+        self.cost_budget = float(json['cost_budget']) if json['cost_budget'] else None
         self.latest_record = parse_short_time(json['hint-latest-record-at'])
         self.earliest_record = parse_short_time(json['hint-earliest-record-at'])
         self.created = parse_time(json['created_at'])
