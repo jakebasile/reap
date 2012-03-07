@@ -112,8 +112,10 @@ def hours(args):
                         else:
                             unbillable += proj_total
                         total += proj_total
-                    ratio = billable / unbillable if unbillable > 0.0 else 'Undef.'
-                    percent = billable / total if total > 0.0 else 'Undef.'
+                    # Divide by zero is undefined, but fudge it a little bit
+                    # for easier output.
+                    ratio = billable / unbillable if unbillable > 0.0 else 0.0
+                    percent = billable / total if total > 0.0 else 0.0
                     print str.format(
                         HOURS_REPORT_FORMAT,
                         total = total,
