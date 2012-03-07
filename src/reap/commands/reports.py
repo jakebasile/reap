@@ -24,7 +24,7 @@ ID:             {person.id}
 Total Hours:    {total}
 Billable:       {billable}
 Non-billable:   {unbillable}
-Ratio B/NB:     {ratio}
+Ratio B/NB:     {ratio:.2%}
 % Billable:     {percent:.2%}
 '''
 
