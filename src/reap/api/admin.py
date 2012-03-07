@@ -140,6 +140,22 @@ class Project:
         response = self.hv.delete_request('projects/' + str(self.id))
         return response
 
+    def entries(self, start = None, end = None):
+        if not start:
+            start = self.earliest_record
+        if not end:
+            end = self.latest_record
+        fr = start.strftime('%Y%m%d')
+        to = end.strftime('%Y%m%d')
+        url = str.format(
+            'projects/{}/entries?from={}&to={}',
+            self.id,
+            fr,
+            to,
+        )
+        response = self.hv.get_request(url)
+        return [Entry(self.hv, ej['day_entry']) for ej in response]
+
 class Client:
     def __init__(self, hv, json):
         self.hv = hv

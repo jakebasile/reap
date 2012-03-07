@@ -198,7 +198,10 @@ In the future, I plan to:
 * Added hours report to reap-reports.
 * Added projects report to reap-reports.
 * Added tasks report to reap-reports
-* Added API support for projects, clients, people, tasks, and people's entries.
+* Added API support for projects and project's entries
+* Added API support for clients
+* Added API support for people and people's entries
+* Added API support for tasks
 * Changed API to not require querying before creating an object.
 
 ### v0.3
