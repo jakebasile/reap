@@ -180,6 +180,7 @@ class TestProjects(HarvestTest):
             self.assertIsNotNone(project.earliest_record)
             self.assertIsNotNone(project.updated)
             self.assertIsNotNone(project.created)
+            self.assertTrue(hasattr(project, 'cost_budget'))
 
     def test_create(self):
         name = random_string()
