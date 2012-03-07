@@ -221,6 +221,52 @@ class TestProjects(HarvestTest):
             if proj.id == id:
                 self.fail()
 
+    def test_entries(self):
+        # create test entries.
+        ts = Timesheet(self.base_uri, self.username, self.password)
+        project = ts.projects()[0]
+        tasks = project.tasks()
+        self.assertIsNotNone(project)
+        entries = []
+        for i in xrange(random.randint(1, 5)):
+            task = random.choice(tasks)
+            entry = ts.create_entry(project.id, task.id, hours = random.random() * 10)
+            entry.stop()
+            entries += [entry]
+        # get the entries from the project.
+        for p in self.hv.projects():
+            if p.id == project.id:
+                admin_proj = p
+        self.assertIsNotNone(admin_proj)
+        proj_entries = admin_proj.entries(
+            start = admin_proj.earliest_record,
+            end = admin_proj.latest_record
+        )
+        # make sure the data exists.
+        for proj_entry in proj_entries:
+            self.assertIsNotNone(proj_entry.hours)
+            self.assertIsNotNone(proj_entry.id)
+            self.assertTrue(hasattr(proj_entry, 'notes'))
+            self.assertIsNotNone(proj_entry.project_id)
+            self.assertIsNotNone(proj_entry.task_id)
+            self.assertIsNotNone(proj_entry.user_id)
+            self.assertIsNotNone(proj_entry.billed)
+            self.assertIsNotNone(proj_entry.closed)
+            self.assertIsNotNone(proj_entry.updated)
+            self.assertIsNotNone(proj_entry.created)
+        # ensure that all entries created were found.
+        for orig_entry in entries:
+            found = False
+            for proj_entry in proj_entries:
+                if proj_entry.id == orig_entry.id:
+                    found = True
+                    break
+            if not found:
+                self.fail()
+        # clean up
+        for orig_entry in entries:
+            orig_entry.delete()
+
 class TestClients(HarvestTest):
     def test_get(self):
         clients = self.hv.clients()
