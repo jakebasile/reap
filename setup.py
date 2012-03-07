@@ -16,7 +16,7 @@ from setuptools import setup, find_packages
 
 setup(
     name = 'reap',
-    version = '0.4-pre',
+    version = '0.4',
     description = 'A command line interface for the Harvest time tracking tool.',
     author = 'Jake Basile',
     author_email = 'jakebasile@me.com',
