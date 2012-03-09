@@ -18,11 +18,11 @@ import urllib2
 import reap.api.timesheet
 from reap.commands.support import *
 
-STATUS_TASK_FORMAT = '''Project:    {entry.project_name}
-Task:       {entry.task_name}
-ID:         {entry.id}
-Notes:      {entry.notes}
-Time:       {hours}:{minutes:02d}
+STATUS_TASK_FORMAT = '''{indicator}   Project:    {entry.project_name}
+    Task:       {entry.task_name}
+    ID:         {entry.id}
+    Notes:      {entry.notes}
+    Time:       {hours}:{minutes:02d}
 '''
 
 # def save_bookmarks(bookmarks):
@@ -72,26 +72,28 @@ def status(args):
                 stopped_entries += [entry]
             total += entry.hours
         if running_entry:
-            print '# Currently Running Timer:'
+            print 'Currently Running Timer:'
             print str.format(
                 STATUS_TASK_FORMAT,
                 entry = running_entry,
                 hours = int(running_entry.hours),
                 minutes = int(running_entry.hours % 1 * 60),
+                indicator = ' '
             )
         if len(stopped_entries) > 0:
-            print '# Stopped Entries:'
+            print 'Stopped Entries:'
             for entry in stopped_entries:
                 print str.format(
                     STATUS_TASK_FORMAT,
                     entry = entry,
                     hours = int(entry.hours),
                     minutes = int(entry.hours % 1 * 60),
+                    indicator = '-'
                 )
         if total:
             total_hours = int(total)
             total_minutes = int(total % 1 * 60)
-            print str.format('# Total Daily Hours: {}:{:02d}\n', total_hours, total_minutes)
+            print str.format('Total Daily Hours: {}:{:02d}\n', total_hours, total_minutes)
 
 # def bookmark(args):
 #     ts = get_timesheet()
@@ -150,11 +152,11 @@ def stop(args):
 def list(args):
     ts = get_timesheet()
     if ts:
-        print '# Projects and Tasks:'
+        print 'Projects and Tasks:'
         for proj in ts.projects():
-            print proj.name
+            print '    ' + proj.name + ':'
             for task in proj.tasks():
-                print str.format('|----{} ({} {})', task.name, proj.id, task.id)
+                print str.format('        - {} ({} {})', task.name, proj.id, task.id)
             print ''
 
 def create(args):
@@ -172,12 +174,13 @@ def create(args):
                 for task in proj.tasks():
                     if task.id == int(args.taskid):
                         entry = ts.create_entry(proj.id, task.id, hours = dec_time, notes = notes)
-                        print '# Added entry:'
+                        print 'Added Entry:'
                         print str.format(
                             STATUS_TASK_FORMAT,
                             entry = entry,
                             hours = int(entry.hours),
                             minutes = int(entry.hours % 1 * 60),
+                            indicator = ' '
                         )
                         return
         print 'No project/task found with those IDs.'
@@ -239,12 +242,13 @@ def update(args):
                     print 'No such project and task ID. Abort.'
                     return
             entry.update(notes, time, proj_id, task_id)
-            print '# Updated entry:'
+            print 'Updated Entry:'
             print str.format(
                 STATUS_TASK_FORMAT,
                 entry = entry,
                 hours = int(entry.hours),
                 minutes = int(entry.hours % 1 * 60),
+                indicator = ' '
             )
         else:
             print 'No entry with that ID.'
