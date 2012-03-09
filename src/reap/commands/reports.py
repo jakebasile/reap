@@ -30,7 +30,7 @@ HOURS_REPORT_FORMAT = '''    -   Name:           {person.first_name} {person.las
         Billable:       {billable}
         Non-billable:   {unbillable}
         Ratio B/NB:     {ratio:.2%}
-        Billable:       {percent:.2%}
+        Ratio B/Total:  {percent:.2%}
 '''
 
 PERSON_PROJECTS_REPORT_HEADING_FORMAT = \
