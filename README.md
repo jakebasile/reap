@@ -42,49 +42,51 @@ To add an entry to your time sheet, you will need to have project and task IDs y
 
     :::bash
     $ reap list
-    # Projects and Tasks:
-    Internal
-    |----Admin (1929052 1244473)
-    |----Business Development (1929052 1244475)
-    |----Project Management (1929052 1244474)
-    |----Vacation (1929052 1244476)
-
-    Test Project
-    |----Admin (1929054 1244473)
-    |----Project Management (1929054 1244474)
+    Projects and Tasks:
+        Test Project 1:
+            - Admin (1966498 1244473)
+            - Project Management (1966498 1244474)
+    
+        Test Project 2:
+            - Admin (1966708 1244473)
+            - Project Management (1966708 1244474)
+    
+        Test Project 3:
+            - Admin (1981495 1244473)
+            - Project Management (1981495 1244474)
 
 You then use those numbers in parenthesis, in that order, with the create command. You can optionally specify notes or hours already worked.
 
     :::bash
-    $ reap create 1929052 1244476 -n 'Maui!' -t 5:20
-    # Added entry:
-    Project:    Internal
-    Task:       Vacation
-    ID:         74563731
-    Notes:      Maui!
-    Time:       5:20
+    $ reap create 1966498 1244474 -n 'TPS Reports' -t 5:20
+    Added Entry:
+        Project:    Test Project 1
+        Task:       Project Management
+        ID:         77509008
+        Notes:      TPS Reports
+        Time:       5:19
 
 You then work with the ID value for further commands, such as updating an entry:
 
     :::bash
-    $ reap update 74563731 -t 2:15 -n 'Cleaned the stables.' -k 1929052 1244473
-    # Updated entry:
-    Project:    Internal
-    Task:       Admin
-    ID:         74565371
-    Notes:      Cleaned the stables.
-    Time:       2:15
+    $ reap update 77509008 -t 2:15 -n 'Met with the Bobs.' -k 1966498 1244473
+    Updated Entry:
+        Project:    Test Project 1
+        Task:       Admin
+        ID:         77509008
+        Notes:      Met with the Bobs.
+        Time:       2:15
 
 Or starting a timer:
 
     :::bash
-    $ reap start 74563731
+    $ reap start 77509008
     Entry timer started.
 
 Or deleting an entry:
 
     :::bash
-    $ reap delete 74563731
+    $ reap delete 77509008
     Entry deleted.
 
 For now, you need to specify the entry ID with all of these operations, the old regular expression search is gone until I figure out what to do with it.
@@ -108,18 +110,18 @@ For example, the following command creates a new administrative user named "Mean
 
     :::bash
     $ reap-admin create-person -a -d 'Firings Department' -r 150.00 Mean Guy meanguy@example.com
-    # Created person:
-    Name:           Mean Guy
-    ID:             315700
-    Department:     Firings Department
-    Admin:          True
-    Contractor:     False
-    Rate:           150.0
+    Created Person:
+            Name:           Mean Guy
+            ID:             320171
+            Department:     Firings Department
+            Admin:          True
+            Contractor:     False
+            Rate:           150.0
 
 You can similarly delete users with the `delete-person` command:
 
     :::bash
-    $ reap-admin delete-person 315700
+    $ reap-admin delete-person 320171
     Person deleted.
 
 For more information, run `reap-admin -h`.
@@ -130,29 +132,20 @@ For more information, run `reap-admin -h`.
 
     :::bash
     $ reap-reports hours -s 20120227 -e 20120302 315700 315701 315702...
-    # Hours Report for 20120227 - 20120302
-    Name:           Mean Guy
-    ID:             315700
-    Total Hours:    11.0
-    Billable:       6.0
-    Non-billable:   5.0
-    Ratio B/NB:     1.2
-    % Billable:     54.55%
+    Hours Report:
+        From: 2012-02-27
+        To: 2012-03-02
+        Results:
+        -   Name:           Mean Guy
+            ID:             315700
+            Total Hours:    11.0
+            Billable:       6.0
+            Non-billable:   5.0
+            Ratio B/NB:     1.2
+            % Billable:     54.55%
     ... and so on ...
 
-There is also a `projects` report that lists the projects a person has worked on over a given time period along with the hours logged to that project and a `tasks` report that lists the tasks a user has worked on across projects over a given time period. A short example of the `projects` report:
-
-    :::bash
-    $ reap-admin projects 315700 315701 315702...
-    # Projects Report for 20120305 - 20120305
-    Name:           Mean Guy
-    Projects:
-        Name:       Test Project 2
-        Hours:      3.0
-    
-        Name:       Test Project 1
-        Hours:      11.0
-    ... and so on ...
+There is also a `projects` report that lists the projects a person has worked on over a given time period along with the hours logged to that project and a `tasks` report that lists the tasks a user has worked on across projects over a given time period.
 
 ## API
 
@@ -188,6 +181,7 @@ In the future, I plan to:
 
 ### v0.4
 
+* Moved all output to YAML compatible format.
 * Added input checking to IDs.
 * Added reap-admin script for administrative functions.
 * Added create-people to reap-admin.
