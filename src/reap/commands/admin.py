@@ -19,27 +19,27 @@ import reap.api.admin
 import datetime
 from reap.commands.support import *
 
-PERSON_FORMAT = '''Name:           {person.first_name} {person.last_name}
-ID:             {person.id}
-Department:     {person.department}
-Admin:          {person.admin}
-Contractor:     {person.contractor}
-Rate:           {person.default_rate}
+PERSON_FORMAT = '''    {ind}   Name:           {person.first_name} {person.last_name}
+        ID:             {person.id}
+        Department:     {person.department}
+        Admin:          {person.admin}
+        Contractor:     {person.contractor}
+        Rate:           {person.default_rate}
 '''
 
-CLIENT_FORMAT = '''Name:           {client.name}
-ID:             {client.id}
-Details:        {client.details}
+CLIENT_FORMAT = '''    {ind}   Name:           {client.name}
+        ID:             {client.id}
+        Details:        {client.details}
 '''
 
-PROJECT_FORMAT = '''Name:       {project.name}
-ID:         {project.id}
-ClientID:   {project.client_id}
-Billable:   {project.billable}
-Bill-By:    {project.bill_by}
-Rate:       {project.hourly_rate}
-Budget:     {project.budget}
-Notes:      {project.notes}
+PROJECT_FORMAT = '''    {ind}   Name:       {project.name}
+        ID:         {project.id}
+        ClientID:   {project.client_id}
+        Billable:   {project.billable}
+        Bill-By:    {project.bill_by}
+        Rate:       {project.hourly_rate}
+        Budget:     {project.budget}
+        Notes:      {project.notes}
 '''
 
 def get_harvest():
@@ -61,13 +61,13 @@ def list_people(args):
             else:
                 employees += [person]
         if len(employees) > 0:
-            print '# Employees'
+            print 'Employees:'
             for emp in employees:
-                print str.format(PERSON_FORMAT, person = emp)
+                print str.format(PERSON_FORMAT, person = emp, ind = '-')
         if len(contractors) > 0:
-            print '# Contractors'
+            print 'Contractors:'
             for contractor in contractors:
-                print str.format(PERSON_FORMAT, person = contractor)
+                print str.format(PERSON_FORMAT, person = contractor, ind = '-')
 
 def create_person(args):
     hv = get_harvest()
@@ -82,10 +82,11 @@ def create_person(args):
             default_rate = float(args.rate) if args.rate else None,
         )
         if person:
-            print '# Created person:'
+            print 'Created Person:'
             print str.format(
                 PERSON_FORMAT,
                 person = person,
+                ind = ' '
             )
         else:
             print 'Could not create person.'
@@ -111,13 +112,13 @@ def list_clients(args):
             else:
                 inactive += [client]
         if len(active) > 0:
-            print '# Active Clients'
+            print 'Active Clients:'
             for act in active:
-                print str.format(CLIENT_FORMAT, client = act)
+                print str.format(CLIENT_FORMAT, client = act, ind = '-')
         if len(inactive) > 0:
-            print '# Inactive Clients'
+            print 'Inactive Clients:'
             for inact in inactive:
-                print str.format(CLIENT_FORMAT, client = inact)
+                print str.format(CLIENT_FORMAT, client = inact, ind = '-')
 
 def list_projects(args):
     hv = get_harvest()
@@ -130,13 +131,13 @@ def list_projects(args):
             else:
                 inactive += [proj]
         if len(active) > 0:
-            print '# Active Projects'
+            print 'Active Projects:'
             for act in active:
-                print str.format(PROJECT_FORMAT, project = act)
+                print str.format(PROJECT_FORMAT, project = act, ind = '-')
         if len(inactive) > 0:
-            print '# Inactive Projects'
+            print 'Inactive Projects:'
             for inact in inactive:
-                print str.format(PROJECT_FORMAT, project = inact)
+                print str.format(PROJECT_FORMAT, project = inact, ind = '-')
 
 def create_project(args):
     hv = get_harvest()
@@ -147,11 +148,10 @@ def create_project(args):
             budget = args.budget if hasattr(args, 'budget') else None,
             notes = args.notes if hasattr(args, 'notes') else None,
             budget_by = args.budgetby if hasattr(args, 'budgetby') else 'none',
-            bill_by = args.billby if hasattr(args, 'billby') else 'none',
         )
         if project:
-            print '# Created Person:'
-            print str.format(PROJECT_FORMAT, project = project)
+            print 'Created Project:'
+            print str.format(PROJECT_FORMAT, project = project, ind = ' ')
 
 def delete_project(args):
     hv = get_harvest()
