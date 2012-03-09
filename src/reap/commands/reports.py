@@ -95,6 +95,8 @@ def hours(args):
                     start.strftime('%Y-%m-%d'),
                     end.strftime('%Y-%m-%d'),
                 )
+                overall_hours = 0.0
+                overall_billable = 0.0
                 projects = hv.projects()
                 for person, entries in entries_collection:
                     map = {p: [] for p in projects}
@@ -110,8 +112,10 @@ def hours(args):
                         proj_total = 0.0
                         for entry in map[proj]:
                             proj_total += entry.hours
+                        overall_hours += proj_total
                         if proj.billable:
                             billable += proj_total
+                            overall_billable += proj_total
                         else:
                             unbillable += proj_total
                         total += proj_total
@@ -128,6 +132,10 @@ def hours(args):
                         person = person,
                         percent = percent,
                     )
+                print str.format(
+                    'Overall Billable: {:.2%}',
+                    overall_billable / overall_hours if overall_hours != 0.0 else 0
+                )
             else:
                 print 'No entries for that time period.'
         else:
