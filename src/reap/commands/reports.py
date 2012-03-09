@@ -19,30 +19,32 @@ import reap.api.admin
 import datetime
 from reap.commands.support import *
 
-HOURS_REPORT_FORMAT = '''Name:           {person.first_name} {person.last_name}
-ID:             {person.id}
-Total Hours:    {total}
-Billable:       {billable}
-Non-billable:   {unbillable}
-Ratio B/NB:     {ratio:.2%}
-% Billable:     {percent:.2%}
+REPORT_HEADER = '''{} Report:
+    From: {}
+    To: {}
+    Results:'''
+
+HOURS_REPORT_FORMAT = '''    -   Name:           {person.first_name} {person.last_name}
+        ID:             {person.id}
+        Total Hours:    {total}
+        Billable:       {billable}
+        Non-billable:   {unbillable}
+        Ratio B/NB:     {ratio:.2%}
+        Billable:       {percent:.2%}
 '''
 
 PERSON_PROJECTS_REPORT_HEADING_FORMAT = \
-'''Name:           {person.first_name} {person.last_name}
-Projects:'''
+'''    -   Name:           {person.first_name} {person.last_name}
+        Projects:'''
 
-PERSON_PROJECTS_REPORT_BODY_FORMAT = '''    Name:       {name}
-    Hours:      {hours}
-'''
+PERSON_PROJECTS_REPORT_BODY_FORMAT = '''        -   Name:       {name}
+            Hours:      {hours}'''
 
-TASKS_HEADER_FORMAT = \
-'''Name:   {person.first_name} {person.last_name}
-Tasks:'''
+TASKS_HEADER_FORMAT = '''    -   Name:   {person.first_name} {person.last_name}
+        Tasks:'''
 
-TASKS_BODY_FORMAT = '''        Task:   {name}
-        Hours:  {hours}
-'''
+TASKS_BODY_FORMAT = '''        -   Task:   {name}
+            Hours:  {hours}'''
 
 def get_harvest():
     info = load_info()
@@ -88,9 +90,10 @@ def hours(args):
             ]
             if len(entries_collection) > 0:
                 print str.format(
-                    '# Hours Report for {} - {}',
-                    start.strftime('%Y%m%d'),
-                    end.strftime('%Y%m%d'),
+                    REPORT_HEADER,
+                    'Hours',
+                    start.strftime('%Y-%m-%d'),
+                    end.strftime('%Y-%m-%d'),
                 )
                 projects = hv.projects()
                 for person, entries in entries_collection:
@@ -141,9 +144,10 @@ def projects(args):
             projects = hv.projects()
             projects_by_id = {project.id: project for project in projects}
             print str.format(
-                '# Projects Report for {} - {}',
-                start.strftime('%Y%m%d'),
-                end.strftime('%Y%m%d'),
+                REPORT_HEADER,
+                'Projects',
+                start.strftime('%Y-%m-%d'),
+                end.strftime('%Y-%m-%d'),
             )
             for person in people:
                 print str.format(PERSON_PROJECTS_REPORT_HEADING_FORMAT, person = person)
@@ -174,9 +178,10 @@ def tasks(args):
             tasks = hv.tasks()
             tasks_by_id = {task.id: task for task in tasks}
             print str.format(
-                '# Tasks Report for {} - {}',
-                start.strftime('%Y%m%d'),
-                end.strftime('%Y%m%d'),
+                REPORT_HEADER,
+                'Tasks',
+                start.strftime('%Y-%m-%d'),
+                end.strftime('%Y-%m-%d'),
             )
             for person in people:
                 print str.format(TASKS_HEADER_FORMAT, person = person)
