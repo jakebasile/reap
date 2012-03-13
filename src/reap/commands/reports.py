@@ -33,11 +33,11 @@ HOURS_REPORT_FORMAT = '''    -   Name:           {person.first_name} {person.las
         Ratio B/Total:  {percent:.2%}
 '''
 
-PERSON_PROJECTS_REPORT_HEADING_FORMAT = \
+PROJECTS_REPORT_HEADING_FORMAT = \
 '''    -   Name:           {person.first_name} {person.last_name}
         Projects:'''
 
-PERSON_PROJECTS_REPORT_BODY_FORMAT = '''        -   Name:       {name}
+PROJECTS_REPORT_BODY_FORMAT = '''        -   Name:       {name}
             Hours:      {hours}'''
 
 TASKS_HEADER_FORMAT = '''    -   Name:   {person.first_name} {person.last_name}
@@ -158,7 +158,7 @@ def projects(args):
                 end.strftime('%Y-%m-%d'),
             )
             for person in people:
-                print str.format(PERSON_PROJECTS_REPORT_HEADING_FORMAT, person = person)
+                print str.format(PROJECTS_REPORT_HEADING_FORMAT, person = person)
                 person_projects = {}
                 for entry in person.entries(start = start, end = end):
                     project = projects_by_id[entry.project_id]
@@ -168,7 +168,7 @@ def projects(args):
                         person_projects[project] = entry.hours
                 for project in person_projects.keys():
                     print str.format(
-                        PERSON_PROJECTS_REPORT_BODY_FORMAT,
+                        PROJECTS_REPORT_BODY_FORMAT,
                         name = project.name,
                         hours = person_projects[project]
                     )
