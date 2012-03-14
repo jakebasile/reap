@@ -20,6 +20,11 @@ from reap.api.base import ReapBase, parse_time, parse_short_time
 class Harvest(ReapBase):
     '''Base class for accessing Harvest admin functions.'''
     def __init__(self, base_uri, username, password):
+        '''Creates a new instance and logs the user in.
+
+        This will send the user's username and password to Harvest and attempt
+        	logging in. If the username and password given are invalid or are
+        	not an administrative account, a ValueError will be thrown.'''
         self.base_uri = base_uri
         self.username = username
         self.password = password
@@ -31,27 +36,28 @@ class Harvest(ReapBase):
         self.id = login_response['user']['id']
 
     def people(self):
-        '''Lists all People on this account.'''
+        '''Generates a list of all People.'''
         people_response = self.get_request('people/')
         return [Person(self, pjson['user']) for pjson in people_response]
 
     def projects(self):
-        '''Lists all Projects on this account.'''
+        '''Generates a list of all Projects.'''
         projects_response = self.get_request('projects/')
         return [Project(self, pjson['project']) for pjson in projects_response]
 
     def tasks(self):
-        '''Lists all Tasks on this account.'''
+        '''Generates a list of all Tasks.'''
         tasks_response = self.get_request('tasks/')
         return [Task(self, tjson['task']) for tjson in tasks_response]
 
     def clients(self):
-        '''Lists all Clients on this account.'''
+        '''Generates a list of all Clients.'''
         clients_response = self.get_request('clients/')
         return [Client(self, cjson['client']) for cjson in clients_response]
 
-    def create_person(self, first_name, last_name, email, department = None, default_rate = None, admin = False, contractor = False):
-        '''Creates a Person with the given information on this account.'''
+    def create_person(self, first_name, last_name, email, department = None,
+    	default_rate = None, admin = False, contractor = False):
+        '''Creates a Person with the given information.'''
         person = {'user':{
             'first_name': first_name,
             'last_name': last_name,
@@ -65,8 +71,9 @@ class Harvest(ReapBase):
         if response:
             return Person(self, response['user'])
 
-    def create_project(self, name, client_id, budget = None, budget_by = 'none', notes = None, billable = True):
-        '''Creates a Project with the given information on this account.'''
+    def create_project(self, name, client_id, budget = None, budget_by =
+    	'none', notes = None, billable = True):
+        '''Creates a Project with the given information.'''
         project = {'project':{
             'name': name,
             'client_id': client_id,
@@ -80,6 +87,7 @@ class Harvest(ReapBase):
             return Project(self, response['project'])
 
 class Person:
+    '''Represents a Person in the Harvest system.'''
     def __init__(self, hv, json):
         self.hv = hv
         self.id = json['id']
@@ -96,10 +104,15 @@ class Person:
         self.timezone = json['timezone']
 
     def delete(self):
+        '''Deletes the person immediately.'''
         response = self.hv.delete_request('people/' + str(self.id))
         return response
 
-    def entries(self, start = datetime.datetime.today(), end = datetime.datetime.today()):
+    def entries(self, start = datetime.datetime.today(), end =
+    	datetime.datetime.today()):
+        '''Retrieves entries from all projects/tasks logged by this person.
+
+        Can be filtered based on time by specifying start/end datetimes.'''
         fr = start.strftime('%Y%m%d')
         to = end.strftime('%Y%m%d')
         url = str.format(
@@ -112,6 +125,7 @@ class Person:
         return [Entry(self.hv, ej['day_entry']) for ej in response]
 
 class Entry:
+    '''A timesheet entry.'''
     def __init__(self, hv, json):
         self.id = json['id']
         self.hours = float(json['hours'])
@@ -125,6 +139,8 @@ class Entry:
         self.created = parse_time(json['created_at'])
 
 class Project:
+    '''A project in the Harvest system.'''
+
     BUDGET_BY_TYPE = ['project', 'project_cost', 'task', 'person', 'none']
 
     def __init__(self, hv, json):
@@ -147,10 +163,14 @@ class Project:
         self.updated = parse_time(json['updated_at'])
 
     def delete(self):
+        '''Immediately deletes the project.'''
         response = self.hv.delete_request('projects/' + str(self.id))
         return response
 
     def entries(self, start = None, end = None):
+        '''Retrieves entries from all people/tasks logged to this project.
+
+        Can be filtered based on time by specifying start/end datetimes.'''
         if not start:
             start = self.earliest_record
         if not end:
@@ -167,6 +187,7 @@ class Project:
         return [Entry(self.hv, ej['day_entry']) for ej in response]
 
 class Client:
+    '''A client in the Harvest system.'''
     def __init__(self, hv, json):
         self.hv = hv
         self.name = json['name']
@@ -190,6 +211,7 @@ class Client:
         self.last_invoice_kind = json['last_invoice_kind']
 
 class Task:
+    '''A Task in the Harvest system.'''
     def __init__(self, hv, json):
         self.default_billable = json['billable_by_default']
         self.deactivated = json['deactivated']
