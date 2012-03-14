@@ -145,7 +145,7 @@ For more information, run `reap-admin -h`.
             % Billable:     54.55%
     ... and so on ...
 
-There is also a `projects` report that lists the projects a person has worked on over a given time period along with the hours logged to that project and a `tasks` report that lists the tasks a user has worked on across projects over a given time period.
+There is also a `projects` report that lists the projects a person has worked on over a given time period along with the hours logged to that project, a `tasks` report that lists the tasks a user has worked on across projects over a given time period, and a `tasks-by-projects` report that displays all tasks logged by all people to a given project.
 
 ## API
 
@@ -178,6 +178,10 @@ In the future, I plan to:
 * Add more administrative functions.
 
 ## Changelog
+
+### v0.5
+
+* Added tasks-by-project report to reap-reports.
 
 ### v0.4
 

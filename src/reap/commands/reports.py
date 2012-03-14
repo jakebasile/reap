@@ -43,8 +43,11 @@ PROJECTS_REPORT_BODY_FORMAT = '''        -   Name:       {name}
 TASKS_HEADER_FORMAT = '''    -   Name:   {person.first_name} {person.last_name}
         Tasks:'''
 
-TASKS_BODY_FORMAT = '''        -   Task:   {name}
-            Hours:  {hours}'''
+PROJECT_BY_TASKS_HEADER_FORMAT = '''    - Name:   {project.name}
+      Tasks:'''
+
+TASKS_BODY_FORMAT = '''        - Task:   {name}
+          Hours:  {hours}'''
 
 def get_harvest():
     info = load_info()
@@ -64,6 +67,17 @@ def get_people(hv, ids):
                 people += [p]
                 break
     return people
+
+def get_projects(hv, ids):
+    projects = []
+    all_projects = hv.projects()
+    for pid in set(ids):
+        id = int(pid)
+        for p in all_projects:
+            if p.id == id:
+                projects += [p]
+                break
+    return projects
 
 def parse_time_inputs(startstr, endstr):
     if startstr:
@@ -208,3 +222,40 @@ def tasks(args):
                     )
         else:
             print 'No such person ID(s).'
+
+def tasks_by_proj(args):
+    hv = get_harvest()
+    if hv:
+        projects = get_projects(hv, args.projectids)
+        if len(projects) > 0:
+            times = parse_time_inputs(args.start, args.end)
+            start = times[0]
+            end = times[1]
+            tasks_by_id = {task.id: task for task in hv.tasks()}
+            print str.format(
+                REPORT_HEADER,
+                'Tasks By Project',
+                start.strftime('%Y-%m-%d'),
+                end.strftime('%Y-%m-%d'),
+            )
+            for project in projects:
+                print str.format(
+                    PROJECT_BY_TASKS_HEADER_FORMAT,
+                    project = project
+                )
+                entries = project.entries(start = start, end = end)
+                project_tasks = {}
+                for entry in entries:
+                    task = tasks_by_id[entry.task_id]
+                    if project_tasks.has_key(task):
+                        project_tasks[task] += entry.hours
+                    else:
+                        project_tasks[task] = entry.hours
+                for task in project_tasks:
+                    print str.format(
+                        TASKS_BODY_FORMAT,
+                        name = task.name,
+                        hours = project_tasks[task]
+                    )
+        else:
+            print 'No such project ID(s).'

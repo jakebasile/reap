@@ -53,6 +53,16 @@ tasks_parser.add_argument('--start', '-s', help = 'When to start the report. Def
 tasks_parser.add_argument('--end', '-e', help = 'When to end the report. Defaults to today. YYYYMMDD')
 tasks_parser.set_defaults(func = tasks)
 
+# Tasks By Project
+task_by_project_parser = subparsers.add_parser(
+    'task-by-project',
+    help = 'Generates a report showing hours logged to all tasks on a project.'
+)
+task_by_project_parser.add_argument('projectids', help = 'The IDs of the projects to genertaae the report on.', nargs = '+', type = int)
+task_by_project_parser.add_argument('--start', '-s', help = 'When to start the report. Defaults to today. YYYYMMDD format.')
+task_by_project_parser.add_argument('--end', '-e', help = 'When to end the report. Defaults to today. YYYYMMDD')
+task_by_project_parser.set_defaults(func = tasks_by_proj)
+
 
 # The Parsening: The Third: This Time It's Personal
 args = parser.parse_args()
