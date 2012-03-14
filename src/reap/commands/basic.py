@@ -154,7 +154,7 @@ def list(args):
     if ts:
         print 'Projects and Tasks:'
         for proj in ts.projects():
-            print '    ' + proj.name + ':'
+            print '    - ' + proj.name + ':'
             for task in proj.tasks():
                 print str.format('        - {} ({} {})', task.name, proj.id, task.id)
             print ''
