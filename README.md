@@ -43,15 +43,15 @@ To add an entry to your time sheet, you will need to have project and task IDs y
     :::bash
     $ reap list
     Projects and Tasks:
-        Test Project 1:
+        - Test Project 1:
             - Admin (1966498 1244473)
             - Project Management (1966498 1244474)
     
-        Test Project 2:
+        - Test Project 2:
             - Admin (1966708 1244473)
             - Project Management (1966708 1244474)
     
-        Test Project 3:
+        - Test Project 3:
             - Admin (1981495 1244473)
             - Project Management (1981495 1244474)
 
