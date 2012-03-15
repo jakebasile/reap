@@ -44,7 +44,7 @@ start_parser = subparsers.add_parser(
     'start',
     help = 'Starts a timer. Will stop other timers automatically.',
 )
-start_parser.add_argument('entryid', help = 'The entry ID or bookmark to start the timer on.', type = int)
+start_parser.add_argument('entryid', help = 'The entry ID or task name regex to start the timer on.')
 start_parser.set_defaults(func = start)
 
 # Stop
