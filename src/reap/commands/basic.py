@@ -15,6 +15,7 @@
 import keyring
 import getpass
 import urllib2
+import re
 import reap.api.timesheet
 from reap.commands.support import *
 
@@ -95,37 +96,31 @@ def status(args):
             total_minutes = int(total % 1 * 60)
             print str.format('Total Daily Hours: {}:{:02d}\n', total_hours, total_minutes)
 
-# def bookmark(args):
-#     ts = get_timesheet()
-#     if ts:
-#         bookmark_entry = None
-#         for entry in ts.entries():
-#             if entry.id == int(args.entryid):
-#                 bookmark_entry = entry
-#         if bookmark_entry:
-#             bookmarks = load_bookmarks()
-#             bookmarks[args.name] = (args.entryid, bookmark_entry.project_name, bookmark_entry.task_name)
-#             save_bookmarks(bookmarks)
-#             print 'Bookmark added.'
-#         else:
-#             print 'No such task on your timesheet.'
-#
-# def bookmarks(args):
-#     bookmarks = load_bookmarks()
-#     if len(bookmarks) > 0:
-#         for key in bookmarks.keys():
-#             bkmk = bookmarks[key]
-#             print str.format('{}: {bkmk[0]} ({bkmk[1]} - {bkmk[2]})', key, bkmk = bkmk)
-
 def start(args):
     ts = get_timesheet()
     if ts:
         found = None
-        id = int(args.entryid)
-        for entry in ts.entries():
-            if entry.id == id:
-                found = entry
-                break
+        entries = ts.entries()
+        try:
+            id = int(args.entryid)
+        except ValueError:
+            # the entry is not an ID.
+            regex = re.compile(args.entryid, flags = re.IGNORECASE)
+            matches = []
+            for entry in entries:
+                if regex.search(entry.task_name):
+                    matches += [entry]
+            if len(matches) is 1:
+                found = matches[0]
+            elif len(matches) >= 2:
+                print 'More than one match found. Narrow your search.'
+                return
+        else:
+            # the entry is an ID.
+            for entry in entries:
+                if entry.id == id:
+                    found = entry
+                    break
         if found:
             if found.started:
                 print 'Entry timer already started.'
@@ -133,7 +128,7 @@ def start(args):
                 entry.start()
                 print 'Entry timer started.'
         else:
-            print 'No entry with that ID.'
+            print 'No entry with that ID or matching that regex.'
 
 def stop(args):
     ts = get_timesheet()
