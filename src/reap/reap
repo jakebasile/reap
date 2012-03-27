@@ -77,7 +77,7 @@ delete_parser = subparsers.add_parser(
     'delete',
     help = 'Deletes an entry.'
 )
-delete_parser.add_argument('entryid', help = 'The entry ID to delete.', type = int)
+delete_parser.add_argument('entryid', help = 'The entry ID or task name regex to delete.')
 delete_parser.set_defaults(func = delete)
 
 # Update
@@ -85,7 +85,7 @@ update_parser = subparsers.add_parser(
     'update',
     help = 'Updates an entry.'
 )
-update_parser.add_argument('entryid', help = 'The entry ID to delete.', type = int)
+update_parser.add_argument('entryid', help = 'The entry ID or task name regex to delete.')
 update_parser.add_argument('--append', '-a', help = 'Causes note and time values to be added to current values instead of overwriting them.', action = 'store_true')
 update_parser.add_argument('--notes', '-n', help = 'The notes to set on the entry. Will overwrite current note unless passed with append argument.')
 update_parser.add_argument('--time', '-t', help = 'The accrued time to set on the entry. Will overwrite current time unless passed with append argument. In HH:MM format.')

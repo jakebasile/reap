@@ -46,6 +46,28 @@ def get_timesheet():
         passwd = keyring.get_password(base_uri, username)
         return reap.api.timesheet.Timesheet(base_uri, username, passwd)
 
+def get_entry(ts, entryid):
+    entries = ts.entries()
+    try:
+        id = int(entryid)
+    except ValueError:
+        # the entry is not an ID.
+        regex = re.compile(entryid, flags = re.IGNORECASE)
+        matches = []
+        for entry in entries:
+            if regex.search(entry.task_name):
+                matches += [entry]
+        if len(matches) is 1:
+            return matches[0]
+        elif len(matches) >= 2:
+            print 'More than one match found. Narrow your search.'
+            return None
+    else:
+        # the entry is an ID.
+        for entry in entries:
+            if entry.id == id:
+                return entry
+
 def login(args):
     password = getpass.getpass()
     try:
@@ -99,33 +121,12 @@ def status(args):
 def start(args):
     ts = get_timesheet()
     if ts:
-        found = None
-        entries = ts.entries()
-        try:
-            id = int(args.entryid)
-        except ValueError:
-            # the entry is not an ID.
-            regex = re.compile(args.entryid, flags = re.IGNORECASE)
-            matches = []
-            for entry in entries:
-                if regex.search(entry.task_name):
-                    matches += [entry]
-            if len(matches) is 1:
-                found = matches[0]
-            elif len(matches) >= 2:
-                print 'More than one match found. Narrow your search.'
-                return
-        else:
-            # the entry is an ID.
-            for entry in entries:
-                if entry.id == id:
-                    found = entry
-                    break
+        found = get_entry(ts, args.entryid)
         if found:
             if found.started:
                 print 'Entry timer already started.'
             else:
-                entry.start()
+                found.start()
                 print 'Entry timer started.'
         else:
             print 'No entry with that ID or matching that regex.'
@@ -183,11 +184,7 @@ def create(args):
 def delete(args):
     ts = get_timesheet()
     if ts:
-        found = None
-        for entry in ts.entries():
-            if entry.id == int(args.entryid):
-                found = entry
-                break
+        found = get_entry(ts, args.entryid)
         if found:
             found.delete()
             print 'Entry deleted.'
@@ -197,20 +194,16 @@ def delete(args):
 def update(args):
     ts = get_timesheet()
     if ts:
-        found = None
-        for entry in ts.entries():
-            if entry.id == int(args.entryid):
-                found = entry
-                break
+        found = get_entry(ts, args.entryid)
         if found:
-            time = entry.hours
-            proj_id = entry.project_id
-            task_id = entry.task_id
-            notes = entry.notes
+            time = found.hours
+            proj_id = found.project_id
+            task_id = found.task_id
+            notes = found.notes
             # check for notes
             if args.notes:
                 if args.append:
-                    notes = entry.notes + args.notes
+                    notes = found.notes + args.notes
                 else:
                     notes = args.notes
             # check for time
@@ -220,7 +213,7 @@ def update(args):
                 minutes = float(split[1])
                 time = hours + minutes / 60
                 if args.append:
-                    time = entry.hours + time
+                    time = found.hours + time
             # check for task.
             if args.task:
                 found_task = None
@@ -236,13 +229,13 @@ def update(args):
                 else:
                     print 'No such project and task ID. Abort.'
                     return
-            entry.update(notes, time, proj_id, task_id)
+            found.update(notes, time, proj_id, task_id)
             print 'Updated Entry:'
             print str.format(
                 STATUS_TASK_FORMAT,
-                entry = entry,
-                hours = int(entry.hours),
-                minutes = int(entry.hours % 1 * 60),
+                entry = found,
+                hours = int(found.hours),
+                minutes = int(found.hours % 1 * 60),
                 indicator = ' '
             )
         else:
