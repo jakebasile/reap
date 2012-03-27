@@ -36,8 +36,6 @@ and for more information on other commands, try, for example:
 
 ### Working With Entries
 
-*NOTE*: In previous versions of **Reap**, you specified and bookmarked _tasks_, now you work with the actual _entries_.
-
 To add an entry to your time sheet, you will need to have project and task IDs you wish to associate with the entry. You can have **Reap** show you this information:
 
     :::bash
@@ -66,7 +64,7 @@ You then use those numbers in parenthesis, in that order, with the create comman
         Notes:      TPS Reports
         Time:       5:19
 
-You then work with the ID value for further commands, such as updating an entry:
+You can then work with the ID value for further commands, such as updating an entry:
 
     :::bash
     $ reap update 77509008 -t 2:15 -n 'Met with the Bobs.' -k 1966498 1244473
@@ -89,7 +87,8 @@ Or deleting an entry:
     $ reap delete 77509008
     Entry deleted.
 
-For now, you need to specify the entry ID with all of these operations, the old regular expression search is gone until I figure out what to do with it.
+As of **Reap** 0.5, you can also specify what entry you are working with by using all or part of the Task name for that entry. So for the above examples you could use 'admin', 'Admin', 'ad.*', and so on instead of the ID 77509008.
+
 
 ## Administration
 
@@ -182,6 +181,8 @@ In the future, I plan to:
 ### v0.5
 
 * Added tasks-by-project report to reap-reports.
+* Fixed reap list output.
+* Added in simple regex task name matching.
 
 ### v0.4
 
