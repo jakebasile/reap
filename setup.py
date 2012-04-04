@@ -21,7 +21,7 @@ setup(
     author = 'Jake Basile',
     author_email = 'jakebasile@me.com',
     url = 'http://code.jakebasile.com/reap/',
-    download_url='http://code.jakebasile.com/reap/downloads/reap-0.4.tar.gz',
+    download_url='http://code.jakebasile.com/reap/downloads/reap-0.5.tar.gz',
     package_dir = {'': 'src'},
     packages = find_packages('src'),
     package_data = {
