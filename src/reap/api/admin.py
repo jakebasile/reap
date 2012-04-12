@@ -137,6 +137,7 @@ class Entry:
         self.closed = json['is_closed']
         self.updated = parse_time(json['updated_at'])
         self.created = parse_time(json['created_at'])
+        self.spent = parse_short_time(json['spent_at'])
 
 class Project:
     '''A project in the Harvest system.'''

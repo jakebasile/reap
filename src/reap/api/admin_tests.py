@@ -144,6 +144,7 @@ class TestPeople(HarvestTest):
             self.assertIsNotNone(rentry.closed)
             self.assertIsNotNone(rentry.updated)
             self.assertIsNotNone(rentry.created)
+            self.assertIsNotNone(rentry.spent)
         # ensure the data matches up.
         self.assertEqual(len(report_entries), len(entries))
         matches = 0
@@ -255,6 +256,7 @@ class TestProjects(HarvestTest):
             self.assertIsNotNone(proj_entry.closed)
             self.assertIsNotNone(proj_entry.updated)
             self.assertIsNotNone(proj_entry.created)
+            self.assertIsNotNone(proj_entry.spent)
         # ensure that all entries created were found.
         for orig_entry in entries:
             found = False
