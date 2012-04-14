@@ -1,5 +1,0 @@
-syntax: regexp
-
-^.*\.pyc$
-^.*reap.egg-info/.*$
-^info\.txt$

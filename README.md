@@ -6,7 +6,6 @@
 
 To install the latest released version of **Reap**, use Pip:
 
-    :::bash
     $ sudo pip install reap
 
 ## Timesheet
@@ -17,7 +16,6 @@ The installation will add a new command to your system, `reap`. This will allow 
 
 To use **Reap**, you must first login. To do so, use the `login` command.
 
-    :::bash
     $ reap login baseuri username
 
 Where `baseuri` is the full base domain you log in to Harvest with, such as "https://companyname.harvestapp.com/". Your username is the email address you registered with. You will be asked for your password while this command executes.
@@ -26,19 +24,16 @@ Where `baseuri` is the full base domain you log in to Harvest with, such as "htt
 
 To explore **Reap**'s commands, try:
 
-    :::bash
     $ reap -h
 
 and for more information on other commands, try, for example:
 
-    :::bash
     $ reap status -h
 
 ### Working With Entries
 
 To add an entry to your time sheet, you will need to have project and task IDs you wish to associate with the entry. You can have **Reap** show you this information:
 
-    :::bash
     $ reap list
     Projects and Tasks:
         - Test Project 1:
@@ -55,7 +50,6 @@ To add an entry to your time sheet, you will need to have project and task IDs y
 
 You then use those numbers in parenthesis, in that order, with the create command. You can optionally specify notes or hours already worked.
 
-    :::bash
     $ reap create 1966498 1244474 -n 'TPS Reports' -t 5:20
     Added Entry:
         Project:    Test Project 1
@@ -66,7 +60,6 @@ You then use those numbers in parenthesis, in that order, with the create comman
 
 You can then work with the ID value for further commands, such as updating an entry:
 
-    :::bash
     $ reap update 77509008 -t 2:15 -n 'Met with the Bobs.' -k 1966498 1244473
     Updated Entry:
         Project:    Test Project 1
@@ -77,13 +70,11 @@ You can then work with the ID value for further commands, such as updating an en
 
 Or starting a timer:
 
-    :::bash
     $ reap start 77509008
     Entry timer started.
 
 Or deleting an entry:
 
-    :::bash
     $ reap delete 77509008
     Entry deleted.
 
@@ -107,7 +98,6 @@ As of **Reap** 0.5, you can also specify what entry you are working with by usin
 
 For example, the following command creates a new administrative user named "Mean Guy" in the department of Firings, with the email meanguy@example.com and the hourly rate of $150.00:
 
-    :::bash
     $ reap-admin create-person -a -d 'Firings Department' -r 150.00 Mean Guy meanguy@example.com
     Created Person:
             Name:           Mean Guy
@@ -119,7 +109,6 @@ For example, the following command creates a new administrative user named "Mean
 
 You can similarly delete users with the `delete-person` command:
 
-    :::bash
     $ reap-admin delete-person 320171
     Person deleted.
 
@@ -129,7 +118,6 @@ For more information, run `reap-admin -h`.
 
 **Reap** also includes some basic reporting functionality, under the `reap-reports` command. An example is the `hours` report: it shows the total, billable, and non-billable hour count for any number of people over a given time period. To generate this report over the course of a week, you would issue this command:
 
-    :::bash
     $ reap-reports hours -s 20120227 -e 20120302 315700 315701 315702...
     Hours Report:
         From: 2012-02-27
@@ -152,7 +140,6 @@ All of the meaty goodness of **Reap** is exposed in the API. The basic timesheet
 
 A quick example of using the api is getting all projects that the current user is part of:
 
-    :::python
     from reap.api.timesheet import Timesheet
     
     baseuri = 'https://yourcompany.harvestapp.com/'
@@ -166,17 +153,20 @@ A quick example of using the api is getting all projects that the current user i
 
 ## More Help
 
-If you can't figure something out, or you think **Reap** is broken, send me an [email](http://www.google.com/recaptcha/mailhide/d?k=01Setbc2JX7fNIQvHb-xyRqA==&c=J27oPGH6BTxbJKfL2FXzDSIGtNL1BzvC4Xt4Jomxcss=) or message me through Bitbucket.
+If you can't figure something out, check the [issue tracker](https://github.com/jakebasile/reap/issues), and I'll look into it as soon as I can.
 
 ## Future Plans
 
 In the future, I plan to:
 
-* Make working with entries easier.
 * Add more error checking and more useful error messages.
 * Add more administrative functions.
 
 ## Changelog
+
+### v0.6
+
+* Moved everything to GitHub!
 
 ### v0.5
 

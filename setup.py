@@ -16,12 +16,12 @@ from setuptools import setup, find_packages
 
 setup(
     name = 'reap',
-    version = '0.5',
-    description = 'A command line interface for the Harvest time tracking tool.',
+    version = '0.6',
+    description = 'A command line interface and library for the Harvest time tracking tool.',
     author = 'Jake Basile',
     author_email = 'jakebasile@me.com',
-    url = 'http://code.jakebasile.com/reap/',
-    download_url='http://code.jakebasile.com/reap/downloads/reap-0.5.tar.gz',
+    url = 'https://github.com/jakebasile/reap/',
+    download_url='https://github.com/downloads/jakebasile/reap/reap-0.6.tar.gz',
     package_dir = {'': 'src'},
     packages = find_packages('src'),
     package_data = {
