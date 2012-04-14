@@ -167,6 +167,7 @@ In the future, I plan to:
 ### v0.6
 
 * Moved everything to GitHub!
+* Added a spent attribute to admin Entries to show what day the entry is set for.
 
 ### v0.5
 
