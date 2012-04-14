@@ -1,6 +1,6 @@
-# **Reap**. The Simple Command Line for Harvest.
+# **Reap**. The Simple Command Line  and Library for Harvest.
 
-**Reap** focuses on providing a simple and clear command line interface to the [Harvest](http://www.harvestapp.com) time tracking system.
+**Reap** focuses on providing a simple and clear command line interface and python library for the [Harvest](http://www.harvestapp.com) time tracking system.
 
 ## Installation
 
