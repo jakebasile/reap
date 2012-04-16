@@ -113,26 +113,29 @@ def hours(args):
                 overall_billable = 0.0
                 projects = hv.projects()
                 for person, entries in entries_collection:
-                    map = {p: [] for p in projects}
-                    for entry in entries:
-                        for proj in map.keys():
-                            if proj.id == entry.project_id:
-                                map[proj] += [entry]
-                                break;
+                    map = {
+                        p: {
+                            t: [
+                                e for e in entries 
+                                if e.project_id == p.id and e.task_id == t.task_id
+                            ] 
+                            for t in p.task_assignments()
+                        }
+                        for p in projects
+                    }
                     total = 0.0
                     billable = 0.0
                     unbillable = 0.0
-                    for proj in map.keys():
-                        proj_total = 0.0
-                        for entry in map[proj]:
-                            proj_total += entry.hours
-                        overall_hours += proj_total
-                        if proj.billable:
-                            billable += proj_total
-                            overall_billable += proj_total
-                        else:
-                            unbillable += proj_total
-                        total += proj_total
+                    for proj in map:
+                        for task in map[proj]:
+                            for entry in map[proj][task]:
+                                if task.billable:
+                                    billable += entry.hours
+                                    overall_billable += entry.hours
+                                else:
+                                    unbillable += entry.hours
+                                total += entry.hours
+                                overall_hours += entry.hours
                     # Divide by zero is undefined, but fudge it a little bit
                     # for easier output.
                     ratio = billable / unbillable if unbillable > 0.0 else 0.0
