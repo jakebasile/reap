@@ -270,14 +270,14 @@ class TestProjects(HarvestTest):
         for orig_entry in entries:
             orig_entry.delete()
 
-    def test_tasks(self):
+    def test_taskassignments(self):
         for p in self.hv.projects():
             self.assertIsNotNone(p)
-            for task in p.tasks():
+            for task in p.task_assignments():
                 self.assertIsNotNone(task)
                 self.assertIsNotNone(task.billable)
                 self.assertIsNotNone(task.deactivated)
-                self.assertIsNotNone(task.hourly_rate)
+                self.assertTrue(hasattr(task, 'hourly_rate'))
                 self.assertIsNotNone(task.id)
                 self.assertIsNotNone(task.updated)
                 self.assertIsNotNone(task.created)

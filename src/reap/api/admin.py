@@ -187,14 +187,14 @@ class Project:
         response = self.hv.get_request(url)
         return [Entry(self.hv, ej['day_entry']) for ej in response]
 
-    def tasks(self):
+    def task_assignments(self):
         '''Retrieves all tasks currently assigned to this project.'''
         url = str.format(
             'projects/{}/task_assignments',
             self.id
         )
         response = self.hv.get_request(url)
-        return [Task(self.hv, tj['task_assignment']) for tj in response]
+        return [TaskAssignment(self.hv, tj['task_assignment']) for tj in response]
 
 class Client:
     '''A client in the Harvest system.'''
@@ -223,19 +223,24 @@ class Client:
 class Task:
     '''A Task in the Harvest system.'''
     def __init__(self, hv, json):
-        if 'billable_by_default' in json:
-            self.default_billable = json['billable_by_default']
-        else:
-            self.billable = json['billable']
+        self.default_billable = json['billable_by_default']
         self.deactivated = json['deactivated']
-        if 'default_hourly_rate' in json:
-            self.default_hourly_rate = json['default_hourly_rate']
-        else:
-            self.hourly_rate = json['hourly_rate']
+        self.default_hourly_rate = json['default_hourly_rate']
         self.id = json['id']
-        if 'name' in json:
-            self.name = json['name']
-        if 'is_default' in json:
-            self.default = json['is_default']
+        self.name = json['name']
+        self.default = json['is_default']
         self.updated = parse_time(json['updated_at'])
         self.created = parse_time(json['created_at'])
+
+class TaskAssignment:
+    '''A Task assigned to a Project.'''
+    def __init__(self, hv, json):
+        self.billable = json['billable']
+        self.deactivated = json['deactivated']
+        self.hourly_rate = json['hourly_rate']
+        self.id = json['id']
+        self.task_id = json['task_id']
+        self.project_id = json['project_id']
+        self.updated = parse_time(json['updated_at'])
+        self.created = parse_time(json['created_at'])
+
