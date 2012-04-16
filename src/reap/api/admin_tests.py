@@ -270,6 +270,18 @@ class TestProjects(HarvestTest):
         for orig_entry in entries:
             orig_entry.delete()
 
+    def test_tasks(self):
+        for p in self.hv.projects():
+            self.assertIsNotNone(p)
+            for task in p.tasks():
+                self.assertIsNotNone(task)
+                self.assertIsNotNone(task.billable)
+                self.assertIsNotNone(task.deactivated)
+                self.assertIsNotNone(task.hourly_rate)
+                self.assertIsNotNone(task.id)
+                self.assertIsNotNone(task.updated)
+                self.assertIsNotNone(task.created)
+
 class TestClients(HarvestTest):
     def test_get(self):
         clients = self.hv.clients()

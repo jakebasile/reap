@@ -168,6 +168,7 @@ In the future, I plan to:
 
 * Moved everything to GitHub!
 * Added a spent attribute to admin Entries to show what day the entry is set for.
+* Added the ability to retrieve assigned tasks to projects in the admin API.
 
 ### v0.5
 
