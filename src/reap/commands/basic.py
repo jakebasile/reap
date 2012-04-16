@@ -26,18 +26,6 @@ STATUS_TASK_FORMAT = '''{indicator}   Project:    {entry.project_name}
     Time:       {hours}:{minutes:02d}
 '''
 
-# def save_bookmarks(bookmarks):
-#     with open(expanduser('~/.reapbkmrks'), 'w') as file:
-#         dump(bookmarks, file)
-#
-# def load_bookmarks():
-#     path = expanduser('~/.reapbkmrks')
-#     if exists(path):
-#         with open(path, 'r') as file:
-#             return load(file)
-#     else:
-#         return {}
-
 def get_timesheet():
     info = load_info()
     if info:
