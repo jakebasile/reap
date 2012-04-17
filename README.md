@@ -153,7 +153,13 @@ A quick example of using the api is getting all projects that the current user i
 
 ## More Help
 
-If you can't figure something out, check the [issue tracker](https://github.com/jakebasile/reap/issues), and I'll look into it as soon as I can.
+If you can't figure out or think **Reap** is broken, [contact me on Twitter](https://twitter.com/jakethecoder) or [check out the issue tracker](https://github.com/jakebasile/reap/issues).
+
+## Contributing
+
+If you'd like to contribute to **Reap**, that's great! Feel free to fork the project, add your changes, and put in a pull request. If you'd like to chat about it, just contact me first.
+
+In any case, all contributors will be acknowledged in the project.
 
 ## Future Plans
 
