@@ -6,7 +6,11 @@
 
 To install the latest released version of **Reap**, use Pip:
 
-    $ sudo pip install reap
+    $ sudo pip install -U reap
+
+You may also install the latest development version:
+
+    $ sudo pip install -U https://github.com/jakebasile/reap/tarball/master
 
 ## Timesheet
 
