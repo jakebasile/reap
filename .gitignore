@@ -1,2 +1,5 @@
 info.txt
-src/reap.egg-info/
+env/
+*.pyc
+*.egg-info
+
