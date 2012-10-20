@@ -200,7 +200,7 @@ class Client:
     '''A client in the Harvest system.'''
     def __init__(self, hv, json):
         self.hv = hv
-        self.name = json['name']
+        self.name = json['name'].encode('utf-8')
         self.id = json['id']
         self.created = parse_time(json['created_at'])
         self.updated = parse_time(json['updated_at'])
@@ -209,7 +209,7 @@ class Client:
         self.currency = json['currency']
         self.currency_symbol = json['currency_symbol']
         self.active = json['active']
-        self.details = json['details']
+        self.details = json['details'].encode('utf-8')
         timeframes = json['default_invoice_timeframe']
         if timeframes and timeframes != 'Custom':
             pst = lambda timestr: \
