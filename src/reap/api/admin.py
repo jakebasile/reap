@@ -211,11 +211,11 @@ class Client:
         self.active = json['active']
         self.details = json['details']
         timeframes = json['default_invoice_timeframe']
-        if timeframes:
-            self.invoice_timeframe = (
-                parse_short_time(timeframes[0]),
-                parse_short_times(timeframes[1])
-            )
+        if timeframes and timeframes != 'Custom':
+            pst = lambda timestr: \
+                datetime.datetime.strptime(timestr, '%Y%m%d')
+            self.invoice_timeframe = \
+                map(pst, timeframes.split(','))
         else:
             self.invoice_timeframe = None
         self.last_invoice_kind = json['last_invoice_kind']
