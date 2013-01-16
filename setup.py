@@ -1,4 +1,4 @@
-# Copyright 2012 Jake Basile
+# Copyright 2012-2013 Jake Basile
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -19,9 +19,8 @@ setup(
     version = '0.7',
     description = 'A command line interface and library for the Harvest time tracking tool.',
     author = 'Jake Basile',
-    author_email = 'jakebasile@me.com',
-    url = 'https://github.com/jakebasile/reap/',
-    download_url='https://github.com/downloads/jakebasile/reap/reap-0.7.tar.gz',
+    url = 'http://www.jakebasile.com/projects/reap/',
+    download_url='http://www.jakebasile.com/downloads/reap-0.7.tar.gz',
     packages = ['reap'],
     package_data = {
         '': ['README.md','LICENSE.txt','NOTICE.txt',]
