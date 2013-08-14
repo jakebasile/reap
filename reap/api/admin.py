@@ -55,6 +55,16 @@ class Harvest(ReapBase):
         clients_response = self.get_request('clients/')
         return [Client(self, cjson['client']) for cjson in clients_response]
 
+    def get_client(self, client_id):
+        '''Gets a single client by id.'''
+        client_response = self.get_request('clients/%s' % client_id)
+        return Client(self, client_response['client'])
+
+    def get_project(self, project_id):
+        '''Gets a single project by id.'''
+        project_response = self.get_request('projects/%s' % project_id)
+        return Project(self, project_response['project'])
+
     def create_person(self, first_name, last_name, email, department = None,
     	default_rate = None, admin = False, contractor = False):
         '''Creates a Person with the given information.'''
@@ -167,8 +177,8 @@ class Project:
         self.budget_by = json['budget_by']
         self.budget = float(json['budget']) if json['budget'] else None
         self.cost_budget = float(json['cost_budget']) if json['cost_budget'] else None
-        self.latest_record = parse_short_time(json['hint-latest-record-at'])
-        self.earliest_record = parse_short_time(json['hint-earliest-record-at'])
+        self.latest_record = parse_short_time(json['hint_latest_record_at'])
+        self.earliest_record = parse_short_time(json['hint_earliest_record_at'])
         self.created = parse_time(json['created_at'])
         self.updated = parse_time(json['updated_at'])
 
