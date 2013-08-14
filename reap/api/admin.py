@@ -86,6 +86,15 @@ class Harvest(ReapBase):
         if response:
             return Project(self, response['project'])
 
+    def create_client(self, name):
+        '''Creates a Client with the given information.'''
+        client = {'client':{
+            'name': name,
+        }}
+        response = self.post_request('clients/', client, follow = True)
+        if response:
+            return Client(self, response['client'])
+
 class Person:
     '''Represents a Person in the Harvest system.'''
     def __init__(self, hv, json):
