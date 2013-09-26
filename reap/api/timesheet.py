@@ -29,17 +29,22 @@ class Timesheet(ReapBase):
         projects = [Project(pjson) for pjson in projects_response['projects']]
         return projects
 
-    def entries(self):
-        entries_response = self.get_request('daily')
-        entries = [Entry(self, ejson) for ejson in entries_response['day_entries']]
+    def entries(self, day_of_year = None, year = None):
+        if(day_of_year and year):
+            entries_response = self.get_request('daily/' + str(day_of_year) + '/' + str(year))
+        else:
+            entries_response = self.get_request('daily')
+        
+        entries = [Entry(self, ejson) for ejson in entries_response.get('day_entries')]
         return entries
 
-    def create_entry(self, project_id, task_id, hours = 0, notes = ''):
+    def create_entry(self, project_id, task_id, hours = 0, notes = '', spent_at = ''):
         entry = {
             'project_id': project_id,
             'task_id': task_id,
             'hours': hours,
             'notes': notes,
+            'spent_at': spent_at
         }
         response = self.post_request('daily/add', entry)
         if response:

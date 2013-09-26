@@ -79,6 +79,20 @@ class TestEntry(TimesheetTest):
                 self.assertIsNotNone(entry.timer_created)
                 self.assertIsNotNone(entry.timer_updated)
 
+    def test_get_specific_day(self):
+        project = self.ts.projects()[0]
+        task = project.tasks()[0]
+        tomorrow = datetime.datetime.utcnow().date() + datetime.timedelta(days=1)
+
+        self.assertEqual(len(self.ts.entries(day_of_year=tomorrow.timetuple().tm_yday)), 0)
+        self.ts.create_entry(project.id, task.id, hours=str(2), notes="specific", spent_at=str(tomorrow))
+        new_entry = self.ts.entries(day_of_year=tomorrow.timetuple().tm_yday, year=tomorrow.year)[0]
+        self.assertIsNotNone(new_entry)
+        self.assertEqual(new_entry.spent_at, str(tomorrow))
+        self.assertEqual(new_entry.notes, "specific")
+        # clean up
+        new_entry.delete()
+
     def test_create(self):
         project = self.ts.projects()[0]
         task = project.tasks()[0]
@@ -87,6 +101,17 @@ class TestEntry(TimesheetTest):
         self.assertTrue(entry.started)
         self.assertEqual(entry.project_id, project.id)
         self.assertTrue((entry.timer_created - datetime.datetime.utcnow()) < datetime.timedelta(minutes = 1))
+        # clean up
+        entry.delete()
+
+    def test_create_specific_day(self):
+        project = self.ts.projects()[0]
+        task = project.tasks()[0]
+        tomorrow = datetime.datetime.utcnow().date() + datetime.timedelta(days=1)
+        entry = self.ts.create_entry(project.id, task.id, hours=str(8), spent_at=str(tomorrow))
+        self.assertIsNotNone(entry)
+        self.assertEqual(entry.project_id, project.id)
+        self.assertEqual(entry.spent_at, str(tomorrow))
         # clean up
         entry.delete()
 
