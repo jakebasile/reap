@@ -2,15 +2,15 @@
 
 **Reap** focuses on providing a simple and clear command line interface and python library for the [Harvest](http://www.harvestapp.com) time tracking system.
 
+## Maintenance Disclaimer
+
+**I am no longer actively maintaining this project, if you are interested in taking over please [contact me](mailto:web@jakebasile.com).**
+
 ## Installation
 
-To install the latest released version of **Reap**, use Pip:
+To install the latest development version:
 
-    $ sudo pip install -U reap
-
-You may also install the latest development version:
-
-    $ sudo pip install -U https://github.com/jakebasile/reap/tarball/master
+    $ sudo pip install -U https://gitlab.com/jakebasile/reap/repository/archive.tar.gz
 
 ## Timesheet
 
