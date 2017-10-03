@@ -10,7 +10,7 @@
 
 To install the latest development version:
 
-    $ sudo pip install -U https://gitlab.com/jakebasile/reap/repository/archive.tar.gz
+    $ sudo pip install -U https://github.com/jakebasile/reap/archive/master.zip
 
 ## Timesheet
 
